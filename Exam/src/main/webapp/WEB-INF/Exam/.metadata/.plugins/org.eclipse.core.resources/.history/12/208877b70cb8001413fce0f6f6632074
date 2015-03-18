@@ -1,0 +1,86 @@
+@import url(http://fonts.googleapis.com/css?family=Open+Sans);
+
+body
+, div, p, span
+, ul, ol, li
+, table, tr, td, th
+, a {font-family: '맑은 고딕', '돋움'; font-size: 12px; margin: 0px; padding: 0px;}
+
+/* 전체 width 
+==============================================================*/
+#header #superBar #superBarChild
+, #header #navBar #navBarChild
+, #content, #footer {width: 1008px; margin: 0px auto;}
+
+
+
+
+/* 헤더 
+==============================================================*/
+#header {}
+
+#header #superBar { height: 80px; background-color: #F4D03F;}
+#header #superBar #superBarChild {}
+#header #superBar #superBarChild > #examLogo {width:60px; margin-top: 12px; float: left; }
+#header #superBar #superBarChild > span {
+	float: right; 
+	margin-top: 6px;
+	/* color : #DEDEDE; */
+}
+
+#header #navBar {height: 40px; /* background-color: #F3F3F4; */ border-bottom: 1px solid #DEDEDE;}
+#header #navBar #navBarChild { text-align:center; padding-top: 10px; padding-left: 5px;}
+
+
+#header #navBar ul {
+	list-style: none;
+	list-style-type: none;  
+	display:block;
+	float: left; 
+}
+#header #navBar ul .navBtn { 
+	display: inline-block;
+	width: 161px; 
+	height: 30px;
+	text-align: center;
+}
+#header #navBar ul .navBtn > a { 
+	font-size: 15px; 
+	color:#333333; 
+	font-family: '맑은 고딕'; 
+	font-weight: bold;  
+}
+#header #navBar ul .navBtn:hover {
+	border-bottom: 3px solid #DEDEDE;
+	color: #454545;
+}
+
+#header #navBar ul .navBtn > a:hover {
+	text-decoration: none;
+	  	
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

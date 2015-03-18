@@ -1,0 +1,5 @@
+#loginBlock {
+	width: 800px; 
+	margin: 150px auto;
+	border-top: 5px solid #F4D03F;
+}

@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- TakeExam mapper -->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="TakeExam">
+ 	
+ 	<!-- 전체 시험 목록  -->
+ 	<select id="list" resultType="com.standard.exam.user.exam.TakeExamDTO">
+ 		select TestPaperManage.seq as seq, TPBDIV.TPBDIV as headline, TPMDIV.TPMDIV as midline, TPSDIV.TPSDIV as footline, 
+		TestPaperManage.TPMSUBJECT as testSubject, TestPaperManage.TPMTIME as timelimit, TestPaperManage.TPMPRICE as testprice 
+		from TestPaperManage 
+		inner join TPSDIV on TestPaperManage.TPSDIV = TPSDIV.SEQ
+		inner join TPMDIV on TPSDIV.TPMDIV = TPMDIV.SEQ
+		inner join TPBDIV on TPMDIV.TPBDIV = TPBDIV.SEQ
+ 	</select>
+ 	
+ 	
+ 	<!-- 페이지별 시험 목록  -->
+ 	<select id="pageList" parameterType="java.util.HashMap" resultType="com.standard.exam.user.exam.TakeExamDTO">
+		select * from
+		(
+		select rownum as rnum, a.* from
+		(
+		select TestPaperManage.seq as seq, TPBDIV.TPBDIV as headline, TPMDIV.TPMDIV as midline, TPSDIV.TPSDIV as footline, 
+		TestPaperManage.TPMSUBJECT as testSubject, TestPaperManage.TPMTIME as timelimit, TestPaperManage.TPMPRICE as testprice 
+		from TestPaperManage
+		inner join TPSDIV on TestPaperManage.TPSDIV = TPSDIV.SEQ
+		inner join TPMDIV on TPSDIV.TPMDIV = TPMDIV.SEQ
+		inner join TPBDIV on TPMDIV.TPBDIV = TPBDIV.SEQ order by TestPaperManage.SEQ desc) a)
+		where rnum between #{start} and #{end}
+ 	</select>
+
+
+	<!-- 전체 시험 수  -->
+	<select id="totalCount" resultType="Integer">
+ 		select count(*) from TestPaperManage
+ 	</select>
+ 	
+ 	
+ 	<!-- 사이드바 메뉴로 넣을 카테고리(시험 대분류)  -->
+ 	<select id="side" resultType="com.standard.exam.user.exam.TakeExamDTO">
+		select seq, TPBDIV as headline from TPBDIV order by seq asc
+ 	</select>
+ 	
+ 	
+ 	<!-- 카테고리별 시험 목록  -->
+ 	<select id="category" parameterType="java.util.HashMap" resultType="com.standard.exam.user.exam.TakeExamDTO">
+		select * from
+		(
+		select rownum as rnum, a.* from
+		(
+		select TestPaperManage.seq as seq, TPBDIV.TPBDIV as headline, TPMDIV.TPMDIV as midline, TPSDIV.TPSDIV as footline, 
+		TestPaperManage.TPMSUBJECT as testSubject, TestPaperManage.TPMTIME as timelimit, TestPaperManage.TPMPRICE as testprice 
+		from TestPaperManage
+		inner join TPSDIV on TestPaperManage.TPSDIV = TPSDIV.SEQ
+		inner join TPMDIV on TPSDIV.TPMDIV = TPMDIV.SEQ
+		inner join TPBDIV on TPMDIV.TPBDIV = TPBDIV.SEQ  where TPBDIV.SEQ=#{sideSeq} order by TestPaperManage.SEQ desc) a)
+		where rnum between #{start} and #{end}
+ 	</select>
+ 	
+ 	
+ 	<!-- 카테고리별 시험 수  -->
+ 	<select id="categoryCount" parameterType="Integer" resultType="Integer">
+ 		select count(*)
+		from TestPaperManage 
+		inner join TPSDIV on TestPaperManage.TPSDIV = TPSDIV.SEQ
+		inner join TPMDIV on TPSDIV.TPMDIV = TPMDIV.SEQ
+		inner join TPBDIV on TPMDIV.TPBDIV = TPBDIV.SEQ where TPBDIV.SEQ=#{sideSeq}
+ 	</select>
+ 	
+ 	
+ 	<!-- 시험별 문제리스트  -->
+ 	<select id="getQuestions" parameterType="Integer" resultType="com.standard.exam.user.exam.LiveQuestionDTO">
+ 		select rownum as rnum, a.* from
+		(
+		select 
+		QuestionManage.SEQ as seq, QuestionManage.QUESTION as Question, QuestionManage.DESCRIPTION as description, QuestionManage.ANSWER as rightanswer,
+		QuestionManage.QUESTION1 as bogi1, QuestionManage.QUESTION2 as bogi2, QuestionManage.QUESTION3 as bogi3, QuestionManage.QUESTION4 as bogi4,
+		QuestionManage.EXPLANATION as explanation
+		from TestGroup
+		inner join QuestionManage on TestGroup.questionManage = QuestionManage.seq  where TestGroup.TestPaperManage = #{examSeq} ) a
+ 	</select>
+ 	
+ 	
+ 	<!-- 선택시험 정보 -->
+ 	<select id="getTestInfo" parameterType="Integer" resultType="com.standard.exam.user.exam.TakeExamDTO">
+		select TestPaperManage.seq as seq, TPBDIV.TPBDIV as headline, TPMDIV.TPMDIV as midline, TPSDIV.TPSDIV as footline, 
+		TestPaperManage.TPMSUBJECT as testSubject, TestPaperManage.TPMTIME as timelimit, TestPaperManage.TPMPRICE as testprice 
+		from TestPaperManage 
+		inner join TPSDIV on TestPaperManage.TPSDIV = TPSDIV.SEQ
+		inner join TPMDIV on TPSDIV.TPMDIV = TPMDIV.SEQ
+		inner join TPBDIV on TPMDIV.TPBDIV = TPBDIV.SEQ where TestPaperManage.seq = #{examSeq}
+ 	</select>
+ 	
+ 	
+ 	<!-- 시험별 문항수  -->
+ 	<select id="getQuestionCNT" parameterType="Integer" resultType="Integer">
+		select count(*)
+		from TestGroup
+		inner join QuestionManage on TestGroup.questionManage = QuestionManage.seq  where TestGroup.TestPaperManage = #{examSeq}
+ 	</select>
+ 	
+ 	
+ 	<!-- 시험별 응시 횟수 -->
+ 	<select id="userTestCNT" parameterType="java.util.HashMap" resultType="Integer">
+ 		select count(*) from TestNumber where member = #{userSeq} and TestPaperManage = #{examSeq}
+ 	</select>
+ 	
+ 	
+ 	<!-- 시험번호 생성 -->
+ 	<insert id="addTestNumber" parameterType="java.util.HashMap">
+ 		insert into TestNumber (seq, member, TestPaperMange, userTestCNT) 
+ 		values ( TestNumberSeq.nextVal, #{userSeq}, #{examSeq}, #{userTestCNT} )
+ 	</insert>
+ 	
+ 	
+ 	<!-- 최근 추가된 시험번호 PK반환 -->
+ 	<select id="testNumberSeq" resultType="String">
+ 		select max(seq) from TestNumber
+ 	</select> 	
+ 	
+</mapper>

@@ -1,0 +1,8 @@
+package com.standard.exam.user.board;
+
+import org.springframework.stereotype.Repository;
+
+@Repository
+public class BoardQNADAO {
+
+}

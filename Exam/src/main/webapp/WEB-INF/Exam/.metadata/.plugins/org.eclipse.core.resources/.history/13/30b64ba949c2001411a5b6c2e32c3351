@@ -1,0 +1,260 @@
+package com.standard.exam.admin.exam;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
+@Controller("testpaper")
+public class TestPaper {
+
+	@Autowired
+	private TestPaperDAO dao;
+		
+	// 문제지리스트
+	@RequestMapping(method = { RequestMethod.GET }, value = "/admin/testpaperadd.action")
+	public String list(TestPaperDTO dto, HttpServletRequest req){
+		// 시험종류 리스트
+		List<TestPaperDTO> tpbdivlist = dao.TestPaperCategoryTpb(dto);
+		req.setAttribute("tpbdivlist", tpbdivlist);
+		return "admin/exam/testpaperadd";
+		
+	}
+	
+	// 시험종류 선택 - 시험과목
+	@RequestMapping(method = { RequestMethod.GET }, value = "/admin/testpapertpbsel.action")
+	public String tpbsel(TestPaperDTO dto, HttpServletRequest req){
+		// 시험종류명으로  seq 받기
+		String tpbdiv = req.getParameter("tpbdiv");
+		List<TestPaperDTO> tpmdivlist = dao.TestPaperCategoryTpm(tpbdiv);
+		req.setAttribute("tpmdivlist", tpmdivlist);
+	
+		return "admin/exam/testpapertpbselok";
+		
+	}
+	
+	
+	// 시험횟수 선택
+	@RequestMapping(method = { RequestMethod.GET }, value = "/admin/testpapertpmsel.action")
+	public String tpmsel(TestPaperDTO dto, HttpServletRequest req){
+		// 시험과목명으로  seq 받기
+		String tpmdiv = req.getParameter("tpmdiv");
+		List<TestPaperDTO> tpsdivlist = dao.TestPaperCategoryTps(tpmdiv);
+
+		req.setAttribute("tpsdivlist", tpsdivlist);
+		return "admin/exam/testpapertpmselok";
+		
+	}
+	
+	// 시험회차 선택 후 문제 가져오기
+	@RequestMapping(method = { RequestMethod.GET }, value = "/admin/testpapertpssel.action")
+	public String tpssel(QuestionDTO dto, HttpServletRequest req){
+		// 시험과목명으로  seq 받기
+		String tpmdiv = req.getParameter("tpmdiv");
+		tpmdiv = dao.tpmdivcheck(tpmdiv);
+		List<QuestionDTO> questionlist = dao.questionlist(tpmdiv);
+		req.setAttribute("questionlist", questionlist);
+		
+		return "admin/exam/testpapertpsselok";
+		
+	}
+	
+	
+	// 문제지 추가하기
+	@RequestMapping(method = { RequestMethod.GET }, value = "/admin/testpapermake.action")
+	public String testpapermake(TestPaperDTO dto, HttpServletRequest req){
+		// 시험과목명으로  seq 받기
+		String tpsDiv = req.getParameter("tpsdiv");
+		String tpmSubject = req.getParameter("testpapersubject");
+		String tpmPrice = req.getParameter("testprice");
+		String tpmTime = req.getParameter("testtime");
+		dto.setTpsDiv(tpsDiv);
+		dto.setTpmSubject(tpmSubject);
+		dto.setTpmTime(tpmTime);
+		dto.setTpmPrice(tpmPrice);
+		
+		// 문제지 등록
+		dao.tpmadd(dto);
+		String testpaperseq = dao.testpaperseq();
+		// 전체시험 등록
+		
+		dao.alltestadd(testpaperseq);
+		
+		return "admin/exam/testpapermakeok";
+		
+	}
+	
+	// 선택문제 추가하기
+	@RequestMapping(method = { RequestMethod.GET }, value = "/admin/testpaperquestionadd.action")
+	public String testpaperquestionadd(QuestionDTO dto, HttpServletRequest req){
+		System.out.println("선택문제추가하기");
+		int cnt = Integer.parseInt(req.getParameter("cnt"));
+		String testpaperseq = dao.testpaperseq();
+		String tpmdiv = req.getParameter("tpmdiv");
+		dto.setTestpaperseq(testpaperseq);
+		
+		for (int i=0; i<cnt; i++) {
+			dto.setSeq(req.getParameter("s" + i));			
+			dao.questionadd(dto);
+		}
+		
+		return "admin/exam/testpaperaddok";
+		
+	}
+	
+	// 시험그룹 리스트 페이지 
+	@RequestMapping(method = { RequestMethod.GET }, value = "/admin/testpaperlist.action")
+	public String testpaperlist(HttpServletRequest req,TestPaperDTO dto){
+
+
+		//페이징 처리
+		/*int totalCount = 0;//총 게시물 수
+		int totalPage = 0; //총 페이지 수
+		int pageSize = 5;  //한페이지 당 게시물 수
+		int no = 0, loop = 0;
+		int nowPage = 0;   //현재 페이지 번호
+		int blockSize = 5;
+*/		
+		// 페이지가 null 이면 1페이지로 설정
+/*		if (req.getParameter("page") == null)
+			nowPage = 1;
+		else
+			nowPage = Integer.parseInt(req.getParameter("page"));
+		
+		// 시작페이지 끝페이지 설정
+		int start = ((nowPage - 1) * pageSize) + 1;
+		int end = start + pageSize - 1;
+		
+		
+		HashMap<String, Integer> map = new HashMap<String, Integer>();
+		map.put("start", start);
+		map.put("end", end);
+		
+		boolean isSearch = false;
+		String searchColumn = req.getParameter("searchColumn");
+		String searchWord = req.getParameter("searchWord");
+		
+		System.out.println("검색 컬럼 : " + searchColumn);
+		System.out.println("검색어 : " + searchWord);
+		
+		if (searchColumn != null && searchWord != null) {
+			isSearch = true;
+		}
+		
+		
+		// 총 게시물 수
+		totalCount = dao.getTotal();		
+		
+		totalPage = (int)Math.ceil(totalCount / (double)pageSize);
+		
+*/		List<String> tpmlistseq = new ArrayList<String>();
+		tpmlistseq = dao.tpmseq();		
+		String tpmSeq = "";
+		List<TestPaperDTO> tpmlist = new ArrayList<TestPaperDTO>();
+		/*if (!isSearch) {*/
+			for (int i = 0; i < tpmlistseq.size(); i++) {
+				// 조건문 없는 seq 리스트 출력
+				
+				
+				// 시험문제수, 응시, 조회수
+				tpmSeq = tpmlistseq.get(i);
+				dto = dao.allestcnt(tpmSeq);
+				tpmlist.add(dto);
+			}
+			
+			System.out.println("tpmlistseq:"+tpmlistseq);
+			/*} else {
+			// 조건문 있는 seq 리스트 출력
+			for (int i = 0; i < tpmlistseq.size(); i++) {
+				// 시험문제수, 응시, 조회수 searchColumn, searchWord
+				tpmSeq = tpmlistseq.get(i);
+				dto = dao.allestcnt(tpmSeq);
+				tpmlist.add(dto);
+			}
+		}
+		
+		for (int i = 0; i < tpmlist.size(); i++) {
+
+			dto = tpmlist.get(i);
+
+			// 제목 10자 이내 처리
+			String tempSubject = dto.getSubject();
+
+			if (tempSubject.length() > 10) {
+				tempSubject = tempSubject.substring(0, 10) + "...";
+				dto.setSubject(tempSubject);
+			}
+
+			// 검색어 표시하기
+			if (isSearch && searchColumn.equals("subject")){
+				dto.setSubject(dto.getSubject().replace(
+						searchWord,
+						"<span style='color:red; background-color:yellow;'>"
+								+ searchWord + "</span>"));}
+			else if (isSearch && searchColumn.equals("content")){
+				dto.setSubject(dto.getContent().replace(
+						searchWord,
+						"<span style='color:red; background-color:yellow;'>"
+								+ searchWord + "</span>"));}
+		}
+
+		// 페이징 -> 페이지바 (태그) 생성하기
+		String pageBar = "";
+		loop = 1;
+		no = ((nowPage - 1) / blockSize*blockSize+1);
+		pageBar += "<ul class='pagination'>";
+		if(no != 1){
+			pageBar += String.format("<li><a href='/exam/admin/testpaperlist.action?page=%d'>«</a></li>",no-1);
+		}
+		
+		else{
+			pageBar += String.format("<li class='disabled'><a href=''#>«</a></li>");
+		}
+		
+		// 페이지번호 링크
+		while (!(loop > blockSize || no > totalPage)) {
+			if (no == nowPage) {
+				pageBar += String
+						.format("<li class='active'><a href='/exam/admin/testpaperlist.action?page=%d'> %d </a></li>",
+								no, no);
+			} else {
+				pageBar += String
+						.format("<li><a href='/JSPTest/board/list.do?page=%d'> %d </a></li>",
+								no, no);
+			}
+
+			loop++;
+			no++;
+		}		
+
+		
+		if(no <= totalPage){ // 마지막블럭 
+			pageBar += String.format("<li><a href='/exam/admin/testpaperlist.action?page=%d'>»</a></li>",no);
+		}
+		else{ // 마지막블럭이 아니면 
+			pageBar += String.format("<li class='disabled'><a href='#'>»</a></li>");
+		}
+		
+		pageBar += "</ul>";
+*/		
+
+/*		req.setAttribute("isSearch", isSearch);
+		req.setAttribute("searchColumn", searchColumn);
+		req.setAttribute("searchWord", searchWord);
+
+		req.setAttribute("totalPage", totalPage);
+		req.setAttribute("totalCount", totalCount);
+		req.setAttribute("nowPage", nowPage);
+		req.setAttribute("pageBar", pageBar);
+*/
+			System.out.println("tpmlist:"+tpmlist);
+		req.setAttribute("tpmlist", tpmlist);
+		return "admin/exam/testpaperlist";
+	}
+}

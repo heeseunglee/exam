@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!-- 관리자 설문조사 mapper -->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="survey">
+	
+	<!-- 설문조사 삽입 -->
+	<insert id="add" parameterType="com.standard.exam.admin.board.SurveyDTO">
+		insert into survey (seq, subject, startDate, endDate, voteCount, main) values (surveySeq.nextVal, #{subject}, to_date(#{startDate}, 'yyyy-mm-dd'), to_date(#{endDate}, 'yyyy-mm-dd'), default, default)
+	</insert>
+	
+	<!-- 방금 삽입한 설문조사 seq 가져오기 -->
+	<select id="getseq" resultType="String">
+		select max(seq) from survey
+	</select>
+	
+	<!-- 설문조사내용삽입 -->
+	<insert id="addcontent" parameterType="java.util.HashMap">
+		insert into surveyContent (seq, content, answerCount, surveySeq) values (surveyContentSeq.nextVal, #{content}, default, #{surveySeq})
+	</insert>
+	
+	<!-- 설문조사제목리스트 -->
+	<select id="subjectlist" resultType="com.standard.exam.admin.board.SurveyDTO">
+		select a.*, rownum as rnum from (select * from survey order by seq desc) a order by rnum desc
+	</select>
+	
+	<!-- 설문조사내용리스트 -->
+	<select id="contentlist" resultType="com.standard.exam.admin.board.SurveyDTO">
+		select * from surveyContent
+	</select>
+	
+	<!-- 설문조사제목리스트 -->
+	<select id="getsubjectlist" resultType="com.standard.exam.admin.board.SurveyDTO" parameterType="String">
+		select * from survey where seq = #{seq}
+	</select>
+	
+	<!-- 설문조사내용리스트 -->
+	<select id="getsurveycontentlist" resultType="com.standard.exam.admin.board.SurveyDTO" parameterType="String">
+		select * from surveyContent where surveySeq = #{seq}
+	</select>
+	
+	<!-- 설문조사내용개수가져오기 -->
+	<select id="getcount" resultType="Integer" parameterType="String">
+		select count(*) from surveyContent where surveySeq = #{seq}
+	</select>
+	
+	
+ 	<!-- 글 수정하기 -->
+ 	<update id="edit" parameterType="com.standard.exam.admin.board.SurveyDTO">
+ 		update survey set startDate = #{startDate}, endDate = #{endDate}, subject = #{subject} where seq = #{seq}
+ 	</update>
+ 	
+	<!-- 설문조사내용seq불러오기 -->
+	<select id="getcontentseq" resultType="String" parameterType="String">
+		select seq from surveyContent where surveySeq = #{seq}
+	</select>
+	
+	<!-- 설문조사내용업데이트 -->
+	<update id="contentedit" parameterType="java.util.HashMap">
+		update surveyContent set content = #{content} where seq = #{surveyContentSeq}
+	</update>
+		
+	<!-- 설문조사내용삭제 -->
+	<delete id="contentdel" parameterType="String">
+		delete from surveyContent where surveySeq = #{seq}
+	</delete>
+	
+	<!-- 설문조사기록삭제 -->
+	<delete id="historydel" parameterType="String">
+		delete from surveyhistory where surveySeq = #{seq}
+	</delete>
+	
+	<!-- 설문조사제목삭제 -->
+	<delete id="subjectdel" parameterType="String">
+		delete from survey where seq = #{seq}
+	</delete>
+	
+	<!-- 설문조사메인등록 -->
+	<update id="updatemain" parameterType="String">
+		update survey set main = 'y' where seq = #{seq}
+	</update>
+	
+	<!-- 메인초기화 -->
+	<update id="clearMain">
+		update survey set main = 'n'
+	</update>
+	
+	
+		
+</mapper>

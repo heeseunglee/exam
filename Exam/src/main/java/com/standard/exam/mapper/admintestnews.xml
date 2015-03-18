@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="testnewsboard">
+	
+	<!-- 글 추가하기 -->
+	<insert id="add" parameterType="com.standard.exam.admin.board.TestNewsBoardDTO">
+	    insert into testnewsboard(seq,testnewsDIV,subject,content,regdate,count) values(testnewsboardseq.nextval, #{testnewsDIV}, #{subject}, #{content}, default, default)  
+	</insert>
+	
+	<!-- 글목록수  -->
+	<select id="getTotal" resultType="Integer">
+ 		select count(*) from testnewsboard
+ 	</select>
+ 	
+	<!-- 글목록 -->
+ 	<select id="list" parameterType="java.util.HashMap" resultType="com.standard.exam.admin.board.TestNewsBoardDTO">
+ 		         select * from (select b.*, rownum as rnum2 from 
+ 		         (select a.*, rownum as rnum from 
+ 		         (select seq,testnewsDIV,subject,content,regdate,count 
+ 		         from testnewsboard order by seq desc)a order by rnum desc)b) <![CDATA[where rnum2 >= #{start} and rnum2 <= #{end}]]>
+ 		
+ 		<!--  -->
+ 		
+
+ 	</select>
+ 	
+ 	<!-- 검색어글목록 -->
+ 	<select id="searchList" parameterType="java.util.HashMap" resultType="com.standard.exam.admin.board.TestNewsBoardDTO">
+ 		 select * from (select b.*, rownum as rnum2 from 
+ 		         (select a.*, rownum as rnum from 
+ 		         ( 	    select seq,testnewsDIV,subject,content,regdate,count from testnewsboard where ${searchColumn} like '%' || #{searchWord} || '%' order by seq desc)a order by rnum desc)b) <![CDATA[where rnum2 >= #{start} and rnum2 <= #{end}]]>
+ 	    
+
+ 	</select>
+ 	
+ 	
+ 	<!-- 조회수증가 -->
+ 	<update id="addCount" parameterType="String">
+ 		update testnewsboard set count = count + 1 where seq = #{seq}
+ 	</update>
+ 	
+ 	<!-- 해당글보기 -->
+ 	<select id="get" parameterType="String" resultType="com.standard.exam.admin.board.TestNewsBoardDTO">
+		select * from testnewsboard where seq = #{seq}
+ 	</select>
+ 	
+ 	<!-- 글삭제 -->
+ 	<delete id="del" parameterType="String">
+ 		delete from testnewsboard where seq = #{seq}
+ 	</delete>
+ 	
+ 	<!-- 수정하기 -->
+ 	<update id="edit" parameterType="com.standard.exam.admin.board.TestNewsBoardDTO">
+ 		update testnewsboard set testnewsDIV=#{testnewsDIV}, subject = #{subject}, content = #{content} where seq = #{seq}
+ 	</update>
+ 	
+</mapper>

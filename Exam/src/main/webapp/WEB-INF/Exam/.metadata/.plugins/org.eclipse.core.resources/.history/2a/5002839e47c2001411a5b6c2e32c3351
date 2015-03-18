@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- 회원가입 mapper -->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="member">
+ 	
+ 	<select id="id_check" parameterType="String" resultType="Integer" >
+ 		
+ 		select count(*) from member where userID = #{userID}
+ 	
+ 	</select>
+ 	
+ 	
+ 	<insert id="receptionadd" parameterType="com.standard.exam.admin.member.MemberDTO">
+ 		insert into Reception(seq,smsCheck,emailCheck,messageCheck) values (ReceptionSeq.nextVal,#{smsCheck},#{emailCheck},
+ 		#{messageCheck})
+ 	</insert>
+ 	
+ 	<select id="addsel" resultType="String">
+ 		select max(seq) from Reception 
+ 	</select>
+ 	
+ 	
+ 	<!-- <insert id="memberStateseq" parameterType="com.standard.exam.admin.member.MemberDTO">
+ 		insert into MemberState(seq, MemberStateDIV) values (MemberStateSeq.nextVal, '일반' )	
+ 	</insert>
+ 	
+ 	 <select id="statesel" resultType="String">
+ 		select max(seq) from memberState
+ 	</select> -->
+ 	 	
+ 	<insert id="add" parameterType="com.standard.exam.admin.member.MemberDTO">
+ 		insert into Member(seq, name, userID, userPW, gender, tel1, tel2, tel3, birth, email, userProduce, reception, address, userImage, MILEAGEPOINT, memberState ) 
+ 		values (MemberSeq.nextVal, #{name}, #{userID}, #{userPW}, #{gender}, #{tel1}, #{tel2}, #{tel3}, 
+ 		to_date(#{birth},'yyyy-mm-dd'), #{email}, #{userProduce}, #{reception}, #{address}, '/exam/resources/images/icons/1424393064_photo-128.png', 1000, '1')
+ 	</insert>
+ 	
+</mapper>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="usermember">
+
+
+ 	<!-- 회원정보 불러오기 -->
+ 	
+ 	<select id="get" parameterType="String" resultType="com.standard.exam.user.member.UserMemberDTO">
+	 	select m.seq as seq, m.name as name, m.userID as userID, m.userPW as userPW , m.gender as gender, 
+m.tel1 as tel1, m.tel2 as tel2, m.tel3 as tel3, m.birth as birth, m.address as address, m.email as email,  
+m.userProduce as userProduce, m.mileagePoint as milegePoint, m.memberState as memeberState , m.userImage as userImage, 
+r.smsCheck as smsCheck, r.emailCheck as emailCheck, r.messageCheck as messageCheck ,
+ms.memberShip as memberShip, ms.memberPeriodStart as memberPeriodStart, ms.memberPeriodEnd as memberPeriodEnd
+from member m 
+inner join reception r on m.reception = r.seq
+inner join membership ms on m.seq = ms.member
+where m.seq = #{seq}
+ 	</select>
+
+
+	<!-- 회원정보 수정하기 -->
+
+ 	<update id="edit" parameterType="com.standard.exam.user.member.UserMemberDTO">
+ 		update member set mileagePoint = #{mileagePoint} where seq=#{seq}
+ 	</update>
+
+
+	<!-- 회원정보 비활성화(탈퇴) -->
+
+</mapper>

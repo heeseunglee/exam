@@ -1,0 +1,38 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>시험의 정석</title>
+<%@include file="/resources/inc/Extend.jsp" %>
+<style type="text/css">
+
+</style>
+<script type="text/javascript">
+
+</script>
+</head>
+<body>
+
+<!-- Header 시작 -->
+<div id="header"><%@include file="/resources/inc/Menu.jsp" %></div>
+<!-- Header 끝 -->
+
+
+<!-- Container 시작 -->
+<div id="container">
+	<!-- 본문블럭 시작--> 
+	<div id="mainBlock">
+		
+	</div><!-- 본문블럭 끝-->
+</div>
+<!-- Container 끝 -->
+
+
+<!-- Footer 시작 -->
+<div id="footer"><%@include file="/resources/inc/Copyright.jsp" %></div>
+<!-- Footer 끝 -->
+</body>
+</html>

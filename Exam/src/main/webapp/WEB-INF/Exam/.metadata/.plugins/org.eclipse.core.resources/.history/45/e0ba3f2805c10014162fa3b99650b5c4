@@ -1,0 +1,59 @@
+package com.standard.exam.user.exam;
+
+import java.util.HashMap;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.json.simple.JSONArray;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
+import com.standard.exam.user.board.JsonUtil;
+import com.standard.exam.user.board.Paging;
+
+@Controller
+public class TakeExamController {
+	
+	@Autowired
+	public TakeExamDAO dao;
+	@Autowired
+	private JsonUtil util;
+	
+	
+	@RequestMapping(method={RequestMethod.GET}, value="/user/exam/list.action")
+	public String examList(HttpServletRequest req) {
+		
+		//페이징
+		String page = req.getParameter("page");
+		Paging paging = new Paging();
+		HashMap<String, Integer> map = paging.getExamPageIndex(page);
+		int totalCount = dao.getTotalCount();
+		//System.out.println(totalCount);
+		//System.out.println(page);
+		
+		String pageBar = paging.getExamPageBar(page, totalCount);
+		
+		
+		List<TakeExamDTO> list = dao.list(map);	// 해당 페이지 시험목록 요청
+		JSONArray examList = util.listToJson(list);	// JSON배열화
+		
+		
+		req.setAttribute("examList", examList);
+		req.setAttribute("pageBar", pageBar);
+		
+		return "/user/exam/ExamList";
+	}
+	
+	
+	@RequestMapping(method={RequestMethod.GET}, value="/user/exam/take.action")
+	public String take() {
+		
+		
+		
+		return "/user/exam/TakeExam";
+	}
+
+}

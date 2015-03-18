@@ -1,0 +1,38 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+
+	<!-- 상단 타이틀바 시작 -->
+	<div id="superBar">
+		<div id="superBarChild">
+			<a href="/exam/home.ex"><img src="/exam/resources/images/exam_logo_2.png" alt="시험의 정석 로고" id="examLogo"/></a>
+			<span><a>홍길동</a>(1000) | 쪽지 <a>1</a> | 정보수정 | 로그아웃</span>
+		</div>
+	</div>
+	<!-- 상단 타이틀바 끝 -->
+
+
+	<!-- 네비게이션바 시작 -->
+	<div id="navBar">
+		<div id="navBarChild">
+				<ul>
+					<li class="navBtn"><a href="#">마이페이지</a></li>
+					<li class="navBtn"><a href="#">시험보기</a></li>
+					<li class="navBtn"><a href="#">오답노트</a></li>
+					<li class="navBtn"><a href="#">시험일정</a></li>
+					<li class="navBtn"><a href="#">커뮤니티</a></li>
+					<li class="navBtn"><a href="#">고객센터</a></li>
+				</ul>
+		</div><!-- navBarChild -->
+	</div>
+	<div id="navBar_sub" style="display: none;">
+		<div id="navBar_subChild">
+			서브메뉴1 <br />서브메뉴2<br />서브메뉴3<br />서브메뉴4<br />서브메뉴5
+		</div>
+	</div>
+	
+	<!-- 상단 드랍다운 메뉴 비활성화 -->
+	<!-- <script type="text/javascript" src="/exam/resources/dist/js/submenu.js"></script> -->
+	<!--네비게이션바 끝 -->
+	
+	

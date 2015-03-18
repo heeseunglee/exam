@@ -1,0 +1,135 @@
+package com.standard.exam.user.exam;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
+import com.standard.exam.user.board.JsonUtil;
+import com.standard.exam.user.board.Paging;
+
+@Controller
+public class TakeExamController {
+	
+	@Autowired
+	public TakeExamDAO dao;
+	@Autowired
+	private JsonUtil util;
+	
+	
+	@RequestMapping(method={RequestMethod.GET}, value="/user/exam/list.action")
+	public String examList(HttpServletRequest req) {
+		
+		String page = req.getParameter("page");
+		String sideSeq = req.getParameter("sideSeq");
+		String selector = "";
+		boolean isCategory = false;
+		
+
+		//페이징
+		Paging paging = new Paging();
+		HashMap<String, Integer> map = paging.getExamPageIndex(page);
+		int totalCount = dao.getTotalCount();
+		String pageBar = paging.getExamPageBar(page, totalCount);
+		
+		
+		// 사이드바 메뉴(대분류)
+		List<TakeExamDTO> side = dao.side();
+		JSONArray sideList = util.sideToJson(side);
+		//System.out.println(side.get(0).getHeadline());
+		
+		
+		List<TakeExamDTO> list = new ArrayList<TakeExamDTO>(); // 시험지 목록을 담을 ArrayList 선언
+		
+		
+		// 대분류 선택 여부 확인
+		if ( sideSeq == null || sideSeq.equals("null") ) {	
+			
+			// - 카테고리 미선택 : 전체목록
+			
+			isCategory = false;
+			selector = "''";
+			list = dao.list(map);
+		
+		} else {
+			
+			// - 카테고리 선택: 대분류별 목록
+			
+			isCategory = true;
+			selector = "#side" + sideSeq;
+			
+			map.put("sideSeq", Integer.parseInt(sideSeq));
+			
+			list = dao.category(map);
+			
+			totalCount = dao.getCategoryCount(sideSeq);
+			pageBar = paging.getExamPageBar(page, totalCount, sideSeq);
+			
+			
+			//선택한 카테고리명
+			JSONObject obj = (JSONObject)sideList.get( Integer.parseInt(sideSeq) - 1 );
+			//System.out.println( obj.get("headline") );
+			req.setAttribute("categoryName", obj.get("headline"));
+		}
+		
+		
+		JSONArray examList = util.listToJson(list);	// DTO --> JSONArray
+		
+		req.setAttribute("examList", examList);
+		req.setAttribute("pageBar", pageBar);
+		req.setAttribute("sideList", sideList);
+		req.setAttribute("isCategory", isCategory);
+		req.setAttribute("selector", selector);
+		req.setAttribute("categorySeq", sideSeq);
+		
+		
+		return "/user/exam/ExamList";
+	}
+	
+	
+	
+	@RequestMapping(method={RequestMethod.GET}, value="/user/exam/take.action")
+	public String take(HttpServletRequest req) {
+		
+		String examSeq = req.getParameter("examSeq");
+		TakeExamDTO testInfo = dao.getTestInfo(examSeq);
+		List<LiveQuestionDTO> questions = dao.getQuestions(examSeq);
+		int questionCNT = dao.getQuestionCNT(examSeq);
+		
+		req.setAttribute("testInfo", testInfo);
+		req.setAttribute("questions", questions);
+		req.setAttribute("questionCNT", questionCNT);
+				
+		return "/user/exam/TakeExam";
+	}
+	
+	
+	@RequestMapping(method={RequestMethod.POST}, value="/user/exam/answer.action")
+	public String answer(HttpServletRequest req) {
+		
+		JSONParser parser = new JSONParser();
+		String temp = req.getParameter("answers");
+		JSONArray answers = new JSONArray();
+		
+		try {
+			answers = (JSONArray)parser.parse(temp);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		
+		System.out.println(answers.get(0));
+		
+		return "";
+	}
+
+}

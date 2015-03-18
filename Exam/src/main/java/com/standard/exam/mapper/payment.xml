@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!-- 관리자 시험지 mapper -->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="payment">
+	
+	<!-- 결제삽입 -->
+	<insert id="add">
+		insert into paymentmanage (seq, paymentList, payment, paymentDate, member, paymentAuth) values (paymentManageSeq.nextVal, #{paymentList}, #{payment}, default, #{member}, default)
+	</insert>
+	
+	<!-- seq가져오기 -->
+	<select id="getseq" resultType="String">
+		select max(seq) from bank
+	</select>
+	
+	<!-- 입금계좌가져오기 -->
+	<select id="getbank" resultType="com.standard.exam.admin.payment.PaymentDTO" parameterType="String">
+		select * from bank where seq = #{seq}
+	</select>
+	
+	<!-- 결제요청가져오기 -->
+	<select id="getlist" resultType="com.standard.exam.admin.payment.PaymentDTO" parameterType="String">
+		select * from paymentmanage where member = #{member} order by paymentDate desc
+	</select>
+	
+	<!-- 관리자결제요청리스트 -->
+	<select id="getadminlist" resultType="com.standard.exam.admin.payment.PaymentDTO">
+		select a.*, rownum as rnum from (select pm.seq as seq, pm.paymentlist as paymentList, pm.payment as payment, pm.paymentdate as paymentDate, m.name as name, m.userid as userId, pm.paymentauth as paymentAuth from paymentmanage pm inner join member m on pm.member = m.seq where pm.paymentauth = 'n')a order by rnum desc
+	</select>
+	
+	<!-- 관리자결제승인 -->
+	<update id="authpayment" parameterType="String">
+		update paymentmanage set paymentauth = 'y' where seq = #{seq}
+	</update>
+	
+</mapper>

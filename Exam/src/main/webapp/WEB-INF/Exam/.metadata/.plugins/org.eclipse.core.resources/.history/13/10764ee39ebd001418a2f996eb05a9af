@@ -1,0 +1,36 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>시험의 정석</title>
+<%@include file="/resources/inc/Extend.jsp" %>
+<link rel="stylesheet" type="text/css" href="/exam/resources/dist/css/login.css" />
+<style type="text/css">
+
+</style>
+<script type="text/javascript">
+
+</script>
+</head>
+<body>
+
+	<div id="loginBlock">
+		<div id="loginBlock_titleBox">
+			<h1>시험의 정석 로그인</h1>
+		</div>
+		<form method="post" action="/exam/auth/loginok.jsp">
+			<div id="loginBlock_inputBox">
+				<input type="text" id="id" name="id" placeholder="아이디" required /><br />
+				<input type="text" id="pw" name="pw" placeholder="비밀번호" required />
+			</div>
+			<div id="loginBlock_btnBox">
+				<input type="submit" value="로그인" id="login_btn" />
+			</div>
+		</form>
+	</div>
+
+</body>
+</html>

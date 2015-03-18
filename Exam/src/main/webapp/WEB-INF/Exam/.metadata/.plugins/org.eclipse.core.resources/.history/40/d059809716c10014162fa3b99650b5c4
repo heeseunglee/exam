@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- TakeExam mapper -->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="TakeExam">
+ 	
+ 	<select id="list" resultType="com.standard.exam.user.exam.TakeExamDTO">
+ 		select TestPaperManage.seq as seq, TPBDIV.TPBDIV as headline, TPMDIV.TPMDIV as midline, TPSDIV.TPSDIV as footline, 
+		TestPaperManage.TPMSUBJECT as testSubject, TestPaperManage.TPMTIME as timelimit, TestPaperManage.TPMPRICE as testprice 
+		from TestPaperManage 
+		inner join TPSDIV on TestPaperManage.TPSDIV = TPSDIV.SEQ
+		inner join TPMDIV on TPSDIV.TPMDIV = TPMDIV.SEQ
+		inner join TPBDIV on TPMDIV.TPBDIV = TPBDIV.SEQ
+ 	</select>
+ 	
+ 	<select id="pageList" parameterType="java.util.HashMap" resultType="com.standard.exam.user.exam.TakeExamDTO">
+		select * from
+		(
+		select rownum as rnum, a.* from
+		(
+		select TestPaperManage.seq as seq, TPBDIV.TPBDIV as headline, TPMDIV.TPMDIV as midline, TPSDIV.TPSDIV as footline, 
+		TestPaperManage.TPMSUBJECT as testSubject, TestPaperManage.TPMTIME as timelimit, TestPaperManage.TPMPRICE as testprice 
+		from TestPaperManage
+		inner join TPSDIV on TestPaperManage.TPSDIV = TPSDIV.SEQ
+		inner join TPMDIV on TPSDIV.TPMDIV = TPMDIV.SEQ
+		inner join TPBDIV on TPMDIV.TPBDIV = TPBDIV.SEQ order by TestPaperManage.SEQ desc) a)
+		where rnum between #{start} and #{end}
+ 	</select>
+
+
+	<select id="totalCount" resultType="Integer">
+ 		select count(*) from TestPaperManage
+ 	</select>
+ 	
+ 	
+ 	<select id="side" resultType="com.standard.exam.user.exam.TakeExamDTO">
+		select seq, TPBDIV as headline from TPBDIV order by seq asc
+ 	</select>
+ 	
+ 	
+ 	<select id="category" parameterType="java.util.HashMap" resultType="com.standard.exam.user.exam.TakeExamDTO">
+		select * from
+		(
+		select rownum as rnum, a.* from
+		(
+		select TestPaperManage.seq as seq, TPBDIV.TPBDIV as headline, TPMDIV.TPMDIV as midline, TPSDIV.TPSDIV as footline, 
+		TestPaperManage.TPMSUBJECT as testSubject, TestPaperManage.TPMTIME as timelimit, TestPaperManage.TPMPRICE as testprice 
+		from TestPaperManage
+		inner join TPSDIV on TestPaperManage.TPSDIV = TPSDIV.SEQ
+		inner join TPMDIV on TPSDIV.TPMDIV = TPMDIV.SEQ
+		inner join TPBDIV on TPMDIV.TPBDIV = TPBDIV.SEQ  where TPBDIV.SEQ=#{sideSeq} order by TestPaperManage.SEQ desc) a)
+		where rnum between #{start} and #{end}
+ 	</select>
+ 	
+ 	<select id="categoryCount" parameterType="String" resultType="Integer">
+ 		select count(*) from TestPaperManage
+ 	</select>
+ 	
+</mapper>

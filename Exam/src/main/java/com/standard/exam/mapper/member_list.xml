@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+ 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="member_list">
+	
+ 	<!-- 회원 총수 -->
+ 	<select id="getTotal" resultType="Integer">
+ 		select count(*) from member where active = 'y'
+ 	</select>
+ 	
+ 	<!-- 회원목록 -->
+ 	<select id="list" parameterType="java.util.HashMap" resultType="com.standard.exam.admin.member.MemberDTO">
+ 		select seq, name,userID, email, tel1,tel2,tel3, mileagePoint, enterDate from member where active = 'y' order by seq asc
+ 	</select>
+ 	
+ 	
+ 	
+ 	<!-- 탈퇴회원목록 -->
+ 	<select id="unregisterlist" parameterType="java.util.HashMap" resultType="com.standard.exam.admin.member.MemberDTO">
+ 		select seq, name,userID, email, tel1,tel2,tel3, mileagePoint, enterDate from member where active = 'n' order by seq asc
+ 	</select>
+ 	
+ 	 <select id="getUnregisterTotal" resultType="Integer">
+ 		select count(*) from member where active = 'n'
+ 	</select>
+ 	
+ 	<select id="searchUnregisterlist" parameterType="java.util.HashMap" resultType="com.standard.exam.admin.member.MemberDTO">
+ 		select seq, name, userID, email, tel1,tel2,tel3, mileagePoint, enterDate from member where ${searchColum} like '%' || #{searchWord} || '%' and active = 'n' order by seq desc 
+ 	</select>
+ 	
+ 	
+ 	<!-- 검색어글목록 -->
+ 	<select id="searchList" parameterType="java.util.HashMap" resultType="com.standard.exam.admin.member.MemberDTO">
+ 		select seq, name, userID, email, tel1,tel2,tel3, mileagePoint, enterDate from member where ${searchColum} like '%' || #{searchWord} || '%' and active = 'y' order by seq desc 
+ 	</select>
+ 	
+ 	<!-- 해당글보기 -->
+ 	<select id="get" parameterType="String" resultType="com.standard.exam.admin.member.MemberDTO">
+select m.seq as seq, m.name as name, m.userID as userID, m.userPW as userPW , m.gender as gender, 
+m.tel1 as tel1, m.tel2 as tel2, m.tel3 as tel3, m.birth as birth, m.address as address, m.email as email,  
+m.userProduce as userProduce, m.mileagePoint as mileagePoint, mbs.memberStateDIV as memberStateDIV ,
+m.userImage as userImage, r.smsCheck as smsCheck, r.emailCheck as emailCheck, r.messageCheck as messageCheck,
+ms.membership as membership, ms.MEMBERPERIODSTART as memberPeriodStart, ms.MEMBERPERIODEND as memberPeriodEnd
+from member m 
+inner join reception r on m.reception = r.seq
+inner join memberState mbs on m.memberState = mbs.seq 
+inner join MEMBERSHIP ms on m.seq = ms.member
+where m.seq = #{seq}
+ 	</select>
+ 	
+
+ 	<!-- 수정하기 -->
+ 	<update id="msedit" parameterType="com.standard.exam.admin.member.MemberDTO">
+ 		update membership set memberShip = #{memberShip}, memberPeriodStart = to_date(#{memberPeriodStart},'yyyy-mm-dd') ,
+ 		memberPeriodEnd = to_date(#{memberPeriodEnd},'yyyy-mm-dd'), member = #{seq} where seq = #{seq}
+ 	</update>
+ 	
+ 	
+ 	<update id="edit" parameterType="com.standard.exam.admin.member.MemberDTO">
+ 		update member set mileagePoint = #{mileagePoint} where seq = #{seq}
+ 	</update>
+ 	
+ 	<update id="mbsedit" parameterType="com.standard.exam.admin.member.MemberDTO">
+ 		update memberState set memberStateDIV = #{memberStateDIV} where seq = #{seq}
+ 	</update>
+ 	
+ 	
+ 	
+ 	<select id="membershiplist" parameterType="java.util.HashMap" resultType="com.standard.exam.admin.member.MemberDTO">
+	 	select 
+	 	m.seq as seq, m.name as name, m.userid as userid, m.gender as gender, 
+	 	m.tel1 as tel1, m.tel2 as tel2, m.tel3 as tel3, 
+	 	m.birth as birth, m.address as address, m.email as email, 
+		m.enterdate as enterdate, m.userproduce as userproduce, m.MILEAGEPOINT as MILEAGEPOINT, 
+		m.reception as reception, m.memberstate as memberstate, m.active as active 
+		from membership s 
+		inner join member m on s.member = m.seq 
+		where m.active = 'y' and s.membership='y'
+ 	</select>
+ 	
+ 	
+ 	<select id="searchMembershipList" parameterType="java.util.HashMap" resultType="com.standard.exam.admin.member.MemberDTO">
+ 		select 
+	 	m.seq as seq, m.name as name, m.userid as userid, m.gender as gender, 
+	 	m.tel1 as tel1, m.tel2 as tel2, m.tel3 as tel3, 
+	 	m.birth as birth, m.address as address, m.email as email, 
+		m.enterdate as enterdate, m.userproduce as userproduce, m.MILEAGEPOINT as MILEAGEPOINT, 
+		m.reception as reception, m.memberstate as memberstate, m.active as active 
+		from membership s 
+		inner join member m on s.member = m.seq where ${searchColum} like '%' || #{searchWord} || '%'  and m.active = 'y' and s.membership='y' order by seq desc
+ 	</select>
+ 	
+ 	
+ 	
+ 	<select id="getMembershipTotal" resultType="Integer">
+ 		select 
+	 	count(*)
+		from membership s 
+		inner join member m on s.member = m.seq where m.active = 'y'
+	</select>
+ 	
+
+ 	<update id="userReactive" parameterType="String">
+		update member set active = 'y' where seq = #{userSeq}
+	</update>
+ 	
+ 	
+ 		 	
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

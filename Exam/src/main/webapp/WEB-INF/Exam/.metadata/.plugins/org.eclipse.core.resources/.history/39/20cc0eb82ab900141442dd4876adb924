@@ -1,0 +1,85 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>시험의 정석</title>
+<%@include file="/resources/inc/Extend.jsp" %>
+<style type="text/css">
+
+</style>
+<script type="text/javascript">
+
+</script>
+</head>
+<body>
+<!-- header Start -->
+<div id="header"><%@include file="src/main/webapp/resources/inc/Menu.jsp" %></div>
+<!-- header End -->
+
+
+<!-- container Start -->
+<div id="container">
+<div id="eventBlock">
+	<div class="eventBlock_list">
+		<ul>
+			<li id="banner1" style="right: 0%; z-index: 0; background: url(/exam/resources/images/banners/banner_01.jpg) 50% 0px no-repeat;">
+				<a href="#" target="_new" title="수험생 이벤트"></a>
+			</li>
+			<li id="banner2" style="right: -100%; z-index: 0; background: url(/exam/resources/images/banners/banner_02.jpg) 50% 0px no-repeat;">
+				<a href="#" target="_new" title="&lt;시험의 정석&gt;활용후기"></a>
+			</li>
+			<li id="banner3" style="right: -100%; z-index: 0; background: url(/exam/resources/images/banners/banner_03.jpg) 50% 0px no-repeat;">
+				<a href="#" target="_new" title="취업 토크 콘서트"></a>
+			</li>
+		</ul>
+	</div>
+	<p id="left_btn_wrap"><a href="javascript:void(0);" title="이전 이벤트" class="main_btn_prev"><img src="/exam/resources/images/icons/slide_left.png" /></a></p>
+	<p id="right_btn_wrap"><a href="javascript:void(0);" title="다음 이벤트" class="main_btn_next"><img src="/exam/resources/images/icons/slide_right.png" /></a></p>
+	<div id="bannerPage"></div>
+</div>
+<script type="text/javascript" src="/exam/resources/dist/js/eventblock.js"></script>
+
+<div id="mainBlock">
+	<div id="leftBox">
+		<div id="left_up">
+			<div id="left_up_title">베스트 시험 후기</div>
+			<div id="left_up_content"></div>
+		</div>
+		<div id="left_down">
+			<div id="left_down_title">자주 묻는 질문 FAQ</div>
+			<div id="left_down_content"></div>
+		</div>
+	</div>
+	<div id="centerBox">
+		<div id="centerBox_title">공지사항</div>
+		<div id="centerBox_content"></div>	
+	</div>
+	<div id="rightBox">
+		<div id="rightBox_title">시험일정</div>
+		<div id="rightBox_content"></div>
+	</div>
+	
+</div>
+
+<div id="quickLinkBlock"></div>
+
+</div>
+<!-- container End -->
+
+
+<!-- footer Start -->
+<div id="footer">
+	<div id="copyBlock">
+	<br />
+	시험의 정석 - 온라인 CBT 서비스 <br />
+	팀 시험의 정석 | 팀장 안해용 | 팀원 김준수 박윤정 이성규 이상영 남경호 윤진혁<br />
+    Copyright &copy; 시험의 정석 2015 All rights reserved.<br /><br /><br /><br /><br />
+	</div>
+	
+</div>
+<!-- footer End -->
+</body>
+</html>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="message">
+ 	
+ 	<!-- 쪽지 쓰기 --> 
+ 	<insert id="sendms" parameterType="com.standard.exam.admin.message.MessageDTO">
+ 		insert into message(seq, subject, content, regDate, toSeq, fromSeq, read) values    (messageSeq.nextVal,  #{subject}, #{content} , default , #{toSeq}, #{fromSeq}, default)
+ 	</insert>
+ 	
+ 	<!-- 받은쪽지목록 -->
+ 	<select id="getms" parameterType="java.util.HashMap" resultType="com.standard.exam.admin.message.MessageDTO">
+ 		select * from message where fromSeq = # {fromSeq} and memberSeq =  #{memberSeq} 
+ 	</select>
+ 	
+ 	 	<!-- 보낸쪽지목록 -->
+ 	<select id="setms" parameterType="java.util.HashMap" resultType="com.standard.exam.admin.message.MessageDTO">
+ 		select * from message where toSeq = # {toSeq} and memberSeq =  #{memberSeq} 
+ 	</select>
+ 	
+ 	
+ 	<!-- 쪽지 삭제 -->
+ 	<delete id="delms" parameterType="String">
+ 		delete from message where seq = #{seq}
+ 	</delete>
+ 	
+ 	<!-- 유저아이디가져오기 -->
+ 	<select id="getuser" resultType="com.standard.exam.admin.message.MessageDTO" parameterType="String">
+ 		select seq as memSeq, name, userId from member where name like '%' || #{name} || '%' and active = 'y' or userId like '%' || #{name} || '%' and active = 'y'
+ 	</select>
+ 	
+ 	<!-- toSeq가져오기 -->
+ 	<select id="gettoseq" resultType="String" parameterType="String">
+ 		select seq as toSeq from member where userId = #{memberId}
+ 	</select>
+ 	
+ 	<!-- 보낸쪽지리스트가져오기 -->
+ 	<select id="getsetlist" resultType="com.standard.exam.admin.message.MessageDTO" parameterType="String">
+ 		select a.*, rownum as rnum from (select ms.seq as seq, ms.subject as subject, ms.content as content, ms.regDate as regDate, ms.toSeq as toSeq, ms.fromSeq as fromSeq, ms.read as read, mb.name as name, mb.userId as userId  from message ms inner join member mb on mb.seq = ms.fromSeq where ms.fromSeq = #{fromSeq} and mb.active = 'y')a order by rnum desc
+ 	</select>
+ 	
+ 	<!-- 받은쪽지리스트가져오기 -->
+ 	<select id="getgetlist" resultType="com.standard.exam.admin.message.MessageDTO" parameterType="String">
+ 		select a.*, rownum as rnum from (select ms.seq as seq, ms.subject as subject, ms.content as content, ms.regDate as regDate, ms.toSeq as toSeq, ms.fromSeq as fromSeq, ms.read as read, mb.name as name, mb.userId as userId  from message ms inner join member mb on mb.seq = ms.fromSeq where ms.toSeq = #{toSeq} and mb.active = 'y')a order by rnum desc
+ 	</select>
+ 	
+ 	<!-- 읽음표시 -->
+ 	<update id="updateread" parameterType="String">
+ 		update message set read = 'y'
+ 	</update>
+ 	
+ 	<!-- 쪽지내용보기 -->
+ 	<select id="getview" resultType="com.standard.exam.admin.message.MessageDTO" parameterType="String">
+ 		select ms.seq as seq, ms.subject as subject, ms.content as content, ms.regDate as regDate, mb.name as name, mb.userId as userId from message ms inner join member mb on ms.fromSeq = mb.seq where ms.seq = #{seq}
+ 	</select>
+ 	
+ 	<!-- 보낸쪽지내용보기 -->
+ 	<select id="getsetview" resultType="com.standard.exam.admin.message.MessageDTO" parameterType="java.util.HashMap">
+ 		select ms.seq as seq, ms.subject as subject, ms.content as content, ms.regDate as regDate, mb.name as name, mb.userId as userId, ms.toSeq as toSeq, ms.read as read from message ms inner join member mb on ms.toSeq = mb.seq where ms.seq = #{seq} and ms.toSeq = #{toSeq}
+ 	</select>
+ 	
+</mapper>

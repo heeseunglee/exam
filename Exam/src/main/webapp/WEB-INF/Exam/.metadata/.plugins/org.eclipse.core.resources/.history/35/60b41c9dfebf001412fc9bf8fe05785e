@@ -1,0 +1,109 @@
+package com.standard.exam.admin.member;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.json.simple.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
+@Controller("member")
+public class Member {
+	
+	@Autowired
+	public MemberDAO dao;
+	
+	@RequestMapping(method={RequestMethod.GET}, value="/admin/member_step2.action")
+	public String member_step2() {
+		
+		return "admin/member/member_step2";
+	}
+	
+	
+	@RequestMapping(method={RequestMethod.GET}, value="/admin/member_step3.action")
+	public String member_step3() {
+	
+		return "admin/member/member_step3";
+	} 
+	
+	@RequestMapping(method={RequestMethod.POST}, value="/member/id_check.action")
+	public String id_check(HttpServletRequest req){
+		
+		/*String userID = req.getParameter("userID");
+
+	
+		String cnt = dao.id_check(userID);
+		req.setAttribute("cnt", cnt);
+		return "/member/idcheck";*/
+		
+		String userID = req.getParameter("userID");
+		
+		boolean id_check = dao.id_check(userID);
+		
+		JSONObject obj = new JSONObject();
+		obj.put("id_check", id_check);
+		
+		System.out.println(obj.toJSONString());
+		
+		req.setAttribute("id_check", obj);
+		
+		return "admin/member/id_check";
+	}
+	
+	
+	@RequestMapping(method={RequestMethod.POST}, value="/admin/member_step3ok.action")
+	public String member_step3ok(MemberDTO dto, HttpServletRequest req, HttpSession session ) {
+
+		dto.setName(req.getParameter("name"));
+		dto.setUserID(req.getParameter("userID"));
+		dto.setUserPW(req.getParameter("userPW"));
+		dto.setGender(req.getParameter("gender"));
+		dto.setTel1(req.getParameter("tel1"));	
+		dto.setTel2(req.getParameter("tel2"));
+		dto.setTel3(req.getParameter("tel3"));
+		dto.setBirth(req.getParameter("birth"));
+		dto.setAddress(req.getParameter("address"));
+		dto.setEmail(req.getParameter("email"));
+		dto.setUserProduce(req.getParameter("userProduce"));
+		dto.setReception1(req.getParameter("reception1"));
+		dto.setReception2(req.getParameter("reception2"));
+		dto.setReception3(req.getParameter("reception3"));
+		
+
+		System.out.println(dto.getName());
+		System.out.println(dto.getUserID());
+		System.out.println(dto.getUserPW());
+		System.out.println(dto.getGender());
+		System.out.println(dto.getTel1());
+		System.out.println(dto.getTel2());
+		System.out.println(dto.getTel3());
+		System.out.println(dto.getBirth());
+		System.out.println(dto.getEmail());
+		System.out.println(dto.getUserProduce());
+		System.out.println(dto.getReception1());
+		System.out.println(dto.getReception2());
+		System.out.println(dto.getReception3());
+		
+		
+				
+		System.out.println("re1" +dto.getReception());
+		dao.receptionadd(dto);
+		String reception = dao.addsel();
+		System.out.println();
+		dto.setReception(reception);
+		
+		
+		System.out.println("re2" +dto.getReception());
+		dao.add(dto);
+		
+		
+		return "admin/member/member_step3ok";
+		
+	}
+	
+}
+
+	
+

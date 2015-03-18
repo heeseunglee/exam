@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!-- 관리자 시험 mapper -->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="examboard">
+
+
+   <!-- 스레드가져오기 -->	
+	<select id="getthread" resultType="Integer">
+		select nvl(max(thread), 0) + 1000 from Examboard
+	</select>
+	 
+	<!-- 게시물 삽입 -->	
+ 	<insert id="add" parameterType="com.standard.exam.user.board.ExamBoardDTO">
+ 	  insert into Examboard(seq, subject, content, regDate, readCount, commentCount, thread, depth, memberSeq)
+ 	  values(examboardSeq.nextVal, #{subject}, #{content}, default, default, default, #{thread}, #{depth}, #{memberSeq})
+ 	</insert>
+ 	
+ 	<!-- 리스트 -->
+ 	<select id="list" resultType="com.standard.exam.user.board.ExamBoardDTO" parameterType="java.util.HashMap">
+       <!--   select * from (select b.*, rownum as rnum2 from (select * from (select a.*, rownum as rnum from (select * from examboard e inner join member m on m.seq = e.memberseq order by thread desc)a) order by thread asc) b) <![CDATA[where rnum >= #{start} and rnum <= #{end}]]> order by thread desc -->
+       select * from (select b.*, rownum as rnum2 from (select a.*, rownum as rnum from (select eb.seq as seq, eb.subject as subject, m.userId as userId, m.name as name, eb.regdate as regdate, eb.readCount as readCount, eb.thread as thread, eb.depth as depth from examboard eb inner join member m on m.seq = eb.memberSeq order by thread)a order by rnum desc)b) <![CDATA[where rnum2 >= #{start} and rnum2 <= #{end}]]>
+     </select>
+     
+     <!-- 검색리스트 -->
+     <select id="searchlist" resultType="com.standard.exam.user.board.ExamBoardDTO" parameterType="java.util.HashMap">
+     	<!-- select * from (select b.*, rownum as rnum2 from (select * from (select a.*, rownum as rnum from (select * from examboard e inner join member m on m.seq = e.memberseq order by thread desc)a) order by thread asc) b)  <![CDATA[where rnum >= #{start} and rnum <= #{end}]]> and ${searchColumn} like '%' || #{searchWord} || '%' order by thread desc -->
+     	select * from (select b.*, rownum as rnum2 from (select a.*, rownum as rnum from (select eb.seq as seq, eb.subject as subject, m.userId as userId, m.name as name, eb.regdate as regdate, eb.readCount as readCount, eb.thread as thread, eb.depth as depth from examboard eb inner join member m on m.seq = eb.memberSeq order by thread)a order by rnum desc)b) <![CDATA[where rnum2 >= #{start} and rnum2 <= #{end}]]> and ${searchColumn} like '%' || #{searchWord} || '%' order by thread desc
+     </select>
+     
+     <!-- 해당글 보기 -->
+     <select id="get" resultType="com.standard.exam.user.board.ExamBoardDTO" parameterType="String">
+         select * from Examboard where seq = #{seq}
+     </select>
+     
+     <!-- 수정하기 -->
+     <update id="edit" parameterType="com.standard.exam.user.board.ExamBoardDTO">
+        update Examboard set subject = #{subject}, content = #{content} where seq = #{seq}
+     </update>
+     
+     <!--삭제하기  -->
+     <delete id="del" parameterType="String">
+        delete from Examboard where seq = #{seq}
+     </delete>
+     
+     <!-- 조회수증가 -->
+ 	<update id="addCount" parameterType="String">
+ 		update Examboard set readCount = readCount + 1 where seq = #{seq}
+ 	</update>
+ 	
+ 	<!--답변 달기  -->
+ 	<update id="updatethread" parameterType="map">
+ 	 	update Examboard set thread = thread - 1 where <![CDATA[thread < #{parentThread} and thread > #{prevThread}]]>
+ 	</update>
+ 	
+ 	<!--게시글 총 개수  -->
+ 	<select id="getTotal" resultType="Integer">
+ 	    select count(*) from Examboard
+ 	</select>
+ 	
+ 	<!--댓글목록 가져오기  -->
+ 	<select id="listComment" parameterType="String" resultType="com.standard.exam.user.board.ExamBoardCommentDTO">
+ 	   select * from Examboardcomment where pSeq = #{seq}
+ 	</select>
+ 	
+ 	<!-- 댓글쓰기 -->
+ 	<insert id="comment" parameterType="com.standard.exam.user.board.ExamBoardCommentDTO">
+ 	   insert into Examboardcomment (seq, name, content, regDate, pSeq) values(examboardcommentSeq.nextVal, #{name}, #{content}, default, #{pSeq})
+ 	</insert>
+ 	<!--댓글 카운트 증가  -->
+ 	<update id="commentCount" parameterType="String">
+ 	  update Examboard set commentCount = commentCount + 1 where seq = #{pSeq}
+ 	</update>
+ 	
+ 	<!-- 댓글삭제하기 -->
+ 	<delete id="delcomment" parameterType="String">
+ 		delete from Examboardcomment where pSeq = #{seq}
+ 	</delete>
+ 	
+ 	<!-- 개별댓글삭제하기 -->
+ 	<delete id="commentdel" parameterType="String">
+		delete from Examboardcomment where seq = #{seq} 	
+ 	</delete>
+ 	
+ 	
+ 	
+ 	</mapper>
+ 	
+ 	
+ 	
+ 	
+ 	
+ 	
+ 	
+ 	
+ 	
+ 	
+ 	
+ 	
+ 	
+ 	
+ 	
+ 	

@@ -1,0 +1,31 @@
+package com.standard.exam.auth;
+
+import org.mybatis.spring.SqlSessionTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public class LoginDAO {
+	
+	@Autowired
+	private SqlSessionTemplate sql;
+
+	
+	/**
+	 * id 존재 여부 check
+	 * 
+	 * @param id
+	 */
+	public boolean idCheck(String id) {
+
+		System.out.println(id);
+		boolean isId = false;
+		
+		int count = sql.selectOne("loginMapper.idCheck", id);
+		System.out.println(count);
+		
+		return isId;
+	}
+	
+	
+}

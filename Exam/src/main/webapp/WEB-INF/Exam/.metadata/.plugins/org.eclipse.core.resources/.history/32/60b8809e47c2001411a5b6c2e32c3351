@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+ 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="member_list">
+	
+ 	<!-- 회원 총수 -->
+ 	<select id="getTotal" resultType="Integer">
+ 		select count(*) from member
+ 	</select>
+ 	
+ 	<!-- 회원목록 -->
+ 	<select id="list" parameterType="java.util.HashMap" resultType="com.standard.exam.admin.member.MemberDTO">
+ 		select seq, name,userID, email, tel1,tel2,tel3, mileagePoint, enterDate from member order by seq asc
+ 	</select>
+ 	
+ 	<!-- 검색어글목록 -->
+ 	<select id="searchList" parameterType="java.util.HashMap" resultType="com.standard.exam.admin.member.MemberDTO">
+ 		select seq, name, userID, email, tel1,tel2,tel3, mileagePoint, enterDate from member where ${searchColum} like '%' || #{searchWord} || '%' order by seq desc
+ 	</select>
+ 	
+ 	<!-- 해당글보기 -->
+ 	<select id="get" parameterType="String" resultType="com.standard.exam.admin.member.MemberDTO">
+	 	select m.seq as seq, m.name as name, m.userID as userID, m.userPW as userPW , m.gender as gender, 
+m.tel1 as tel1, m.tel2 as tel2, m.tel3 as tel3, m.birth as birth, m.address as address, m.email as email,  
+m.userProduce as userProduce, m.mileagePoint as milegePoint, m.memberState as memeberState , 
+m.userImage as userImage, r.smsCheck as smsCheck, r.emailCheck as emailCheck, r.messageCheck as messageCheck 
+from member m inner join reception r on m.reception = r.seq
+where m.seq = #{seq}
+ 	</select>
+ 	
+
+ 	<!-- 수정하기 -->
+
+ 	<insert id="membershipadd" parameterType="com.standard.exam.admin.member.MemberDTO">
+ 		insert into membership(seq, memberShip, memberPeriodStart,memberPeriodEnd, member) 
+ 		values (membershipSeq.nextval, #{memberShip},to_date(#{memberPeriodStart},'yyyy-mm-dd'),to_date(#{memberPeriodEnd},'yyyy-mm-dd'), #{seq})
+	</insert>
+ 
+ 	<update id="edit" parameterType="com.standard.exam.admin.member.MemberDTO">
+ 		update member set mileagePoint = #{mileagePoint} where seq=#{seq}
+ 	</update>
+ 	
+ 	
+ 	<!-- 글삭제 -->
+ 	<delete id="del" parameterType="Integer">
+ 		delete from member where seq = #{seq}
+ 	</delete>
+
+	<!-- 유료회원 기록 조회 -->
+	
+	<select id="membercnt" parameterType="Integer" resultType="Integer">
+		select count(*) from membership where member = #{seq}
+	</select>
+	
+	<!-- 선택유료회원 정보삭제 -->
+	<delete id="membershipdel" parameterType="Integer">
+		delete from membership where member = #{seq}
+	</delete>
+	 	
+</mapper>

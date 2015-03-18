@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="testpaper">
+    
+	<!-- 시험종류 -->
+	<!-- 시험종류 리스트 -->
+	<select id="tpbdivlist" resultType="com.standard.exam.admin.exam.TestPaperDTO">
+	    select seq as tpbdivSeq, tpbdiv from TPBDIV
+	</select>
+
+	<!-- 시험종류(대분류) seq 호출 -->
+	<select id="tbpdivcheckseq" resultType="String" parameterType="String">
+	    select seq as tpbdivSeq from TPBDIV where TPBDIV = #{tpbdiv}
+	</select>	
+
+	<!-- 시험과목 -->
+	<!-- 시험과목(중분류) 리스트 -->
+	<select id="tpmdivlist" resultType="com.standard.exam.admin.exam.TestPaperDTO" parameterType="String">
+	    select seq as tpmdivSeq,tpmdiv from TPMDIV where tpbdiv = #{tpbdiv}
+	</select>
+	
+	<!-- 문제선택 중분류 리스트 -->
+	<select id="tpmdivcheck" resultType="String" parameterType="String">
+	    select tpmdiv from TPMDIV where seq = #{tpmdiv}
+	</select>
+		
+
+	
+	<!-- 시험회차 -->
+	<!-- 시험회차(소분류) 리스트 -->
+	<select id="tpsdivlist" resultType="com.standard.exam.admin.exam.TestPaperDTO" parameterType="String">
+	    select seq as tpsdivSeq,tpsDiv from TPSDIV where tpmdiv = #{tpmdiv}
+	</select>
+	
+	<!-- 시험문제 -->
+	<!-- 시험문제불러오기 -->
+	<select id="questionlist" resultType="com.standard.exam.admin.exam.QuestionDTO" parameterType="String">
+	    select * from QuestionManage where questionCode like '%' || #{tpmdiv} || '%'
+	</select>
+	
+	
+	
+	<!-- 문제지등록 -->
+	<insert id="tpmadd" parameterType="com.standard.exam.admin.exam.TestPaperDTO">
+	    insert into TestPaperManage(seq,TPMPrice,TPMTime,TPMsubject, tpsDiv) 
+	    	values(TestPaperManageSeq.nextval,#{tpmPrice},#{tpmTime},#{tpmSubject},#{tpsDiv})
+	</insert>
+	
+	
+	<!-- 선택문제 중분류 호출 -->
+	<select id="testpaperseq" resultType="String">
+	    select max(seq) from testpapermanage 
+	</select>
+	
+	<!-- 선택문제 추가 -->
+	<insert id="questionadd" parameterType="com.standard.exam.admin.exam.QuestionDTO">
+	    insert into TestGroup(seq,QuestionManage,TestPaperManage) values(TestGroupSeq.nextval,#{seq},#{testpaperseq})
+	</insert>
+	
+	<!-- 시험지 seq 호출 -->
+	<select id="tpmseq" resultType="String">
+	    select seq as tpmseq from testpapermanage	    
+	</select>
+	
+	<!-- 시험지리스트 -->
+	<select id="alltestcnt" resultType="com.standard.exam.admin.exam.TestPaperDTO" parameterType="String">
+	    SELECT seq as alltestseq,  alltestcnt,receiptcnt, (SELECT TPMSUBJECT FROM TESTPAPERMANAGE where seq= #{tpmSeq}) as tpmSubject,
+	    	(SELECT count(QUESTIONMANAGE) FROM TESTGROUP where TESTPAPERMANAGE= #{tpmSeq})  as questioncnt 
+	    	FROM alltest where TESTPAPERMANAGE= #{tpmSeq} order by seq desc
+	<!--  select * from (select b.*, rownum as rnum2 from (select a.*, rownum as rnum from 
+		(SELECT seq as alltestseq,  alltestcnt,receiptcnt, (SELECT TPMSUBJECT FROM TESTPAPERMANAGE where seq= #{tpmSeq}) as tpmSubject,
+	    	(SELECT count(QUESTIONMANAGE) FROM TESTGROUP where TESTPAPERMANAGE= #{tpmSeq})  as questioncnt 
+	    		FROM alltest where TESTPAPERMANAGE= #{tpmSeq} order by seq desc)a order by rnum desc)b) 
+					<![CDATA[where rnum2 >= #{start} and rnum2 <= #{end}]]> -->
+	</select>
+	
+	<!-- 전체시험 등록 testpaperseq -->
+		<insert id="alltestadd" parameterType="String">
+		    insert into alltest(SEQ,alltestCNT,ReceiptCNT,TestPaperManage) 
+		    	values(alltestseq.nextVal, default,default,#{testpaperseq})		    
+		</insert>
+	
+	<!-- 총페이지수 -->
+		<select id="getTotal" resultType="Integer">
+		    select count(*) from alltest
+		</select>
+		
+	 <!-- 문제지 삭제 --> 
+		<delete id="testpaperdel" parameterType="String">
+		    delete from alltest where seq = #{tpmSeq}
+		</delete>
+		
+	<!-- 문제지 수정 정보 불러오기-->
+		<select id="tpmedit" resultType="com.standard.exam.admin.exam.TestPaperDTO" parameterType="String">
+		    select tpm.seq as tpmseq,tb.seq as tpbdivSeq,tm.seq as tpmdivSeq,
+		    ts.seq as tpsdivSeq, tb.TPBDIV as tpbdiv,tm.TPMDIV as tpmdiv, 
+		    ts.TPSDIV as tpsDiv, tpm.TPMSUBJECT as tpmSubject, tpm.TPMPRICE as tpmPrice, 
+		    tpm.TPMTIME as tpmTime from testpapermanage tpm 
+		    inner join tpsdiv ts on ts.SEQ = tpm.tpsdiv 
+		    inner join tpmdiv tm on ts.TPMDIV = tm.SEQ 
+		    inner join tpbdiv tb on tm.TPBDIV = tb.SEQ 
+		    where tpm.seq = #{tpmSeq}
+		</select>
+	
+	
+	<!-- questioneditlist 시험문제 불러오기 -->
+		<select id="questioneditlist" resultType="com.standard.exam.admin.exam.QuestionDTO" parameterType="String">
+		   select qm.seq as seq,qm.QUESTIONCODE as questionCode, qm.QUESTION as question  
+		   from TESTGROUP tg 
+		   inner join QUESTIONMANAGE qm on tg.QUESTIONMANAGE = qm.seq 
+		   inner join TESTPAPERMANAGE tpm on tg.TESTPAPERMANAGE = tpm.SEQ
+		   where tpm.SEQ = #{tpmSeq}
+		</select>
+	
+	<!-- 전체문제 불러오기 -->
+		<select id="questioneditlist1" resultType="com.standard.exam.admin.exam.QuestionDTO" parameterType="String">
+	  		select qm.seq as seq,qm.QUESTIONCODE as questionCode, tpm.TPMSUBJECT as TPMSUBJECT, qm.QUESTION as question from TESTGROUP tg
+	          inner join QUESTIONMANAGE qm on tg.QUESTIONMANAGE = qm.seq 
+		   		inner join TESTPAPERMANAGE tpm on tg.TESTPAPERMANAGE = tpm.SEQ where tpm.TPMSUBJECT like '%' || #{tpmSubject}  || '%'
+		</select>
+		
+		
+	<!-- 시험그룹 문제 삭제 -->
+		<delete id="tpmDel" parameterType="String">
+		    delete from TESTGROUP where TESTPAPERMANAGE = #{tpmSeq}		    
+		</delete>
+		
+</mapper>

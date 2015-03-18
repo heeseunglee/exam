@@ -1,0 +1,72 @@
+/**
+* 	질문/답변 게시판 CSS
+*/
+
+/* 테이블 기초 설정 */
+#QNA th { text-align: center; }
+#QNA .line { cursor: pointer; }
+#QNA .secret { cursor: auto; }
+#QNA .QNA_seq { width: 80px; text-align: center; }
+#QNA .QNA_subject {width: 400px; text-align:left; }
+#QNA .QNA_writer { width: 120px; text-align: center; }
+#QNA .QNA_regDate { width: 180px; text-align: center; }
+
+
+
+/* view 동적 태그 */
+#QNA .view { 
+	background-color: #eef2ff;
+	/* opacity: 0.8; */
+	height: 80px;
+}
+#QNA .view td {
+	vertical-align: middle;
+}
+
+#QNA .view #view_Q,
+#QNA .view #view_A {
+	font-size: 35px;
+}
+#QNA .view #view_Q {
+	padding-left: 28px;
+	color: #E9573F;
+}
+#QNA .view #view_A {
+	padding-left: 31px; 
+	color: #4A89DC;
+}
+
+#inSubject {
+	margin: 10px 0px;
+	/* width:710px;
+	display: inline; */
+}
+
+
+#inContent {
+	margin: 10px 0px;
+	height: 150px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

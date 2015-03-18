@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- login_Mapper -->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="loginMapper">
+ 	
+ 	<select id="list" resultType="com.standard.exam.user.board.BoardQNADTO">
+ 		select seq, subject, writer, to_char(regDate, 'YYYY-MM-DD HH:mm') as regDate, secret, answer from boardQNA order by seq desc
+ 	</select>
+ 	
+ 	<select id="view" parameterType="String" resultType="com.standard.exam.user.board.BoardQNADTO">
+ 		select * from boardQNA where seq = #{seq}
+ 	</select>
+ 	
+ 	<select id="pageList" parameterType="java.util.HashMap" resultType="com.standard.exam.user.board.BoardQNADTO">
+		select * from  
+		(select a.*, rownum as rnum from 
+		(select seq, subject, writer, to_char(regDate, 'YYYY-MM-DD HH:mm') as regDate, secret, answer from boardQNA order by seq desc) a )
+		where rnum between #{start} and #{end}
+ 	</select>
+ 	
+ 	<select id="totalCount" resultType="Integer">
+ 		select count(*) from boardQNA
+ 	</select>
+
+ 	
+</mapper>

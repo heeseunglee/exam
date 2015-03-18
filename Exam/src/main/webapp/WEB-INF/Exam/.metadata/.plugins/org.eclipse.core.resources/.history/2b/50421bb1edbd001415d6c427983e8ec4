@@ -1,0 +1,11 @@
+package com.standard.exam.auth;
+
+public class LoginDTO {
+	private String seq;
+	private String name;
+	private String userId;
+	private String userImage;
+	private String mileagePoint;
+	private String memberState;
+	
+}

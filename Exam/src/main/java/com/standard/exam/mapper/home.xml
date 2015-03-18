@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!-- 관리자 시험지 mapper -->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="home">
+	
+	<!-- 설문조사제목릭스트 -->
+	<select id="subjectlist" resultType="com.standard.exam.admin.board.SurveyDTO">
+		select seq, subject, startDate, endDate, voteCount, main from survey where main = 'y'
+	</select>
+		
+	<!-- 설문조사내용리스트 -->
+	<select id="contentlist" resultType="com.standard.exam.admin.board.SurveyDTO" parameterType="String">
+		select a.*, rownum as rnum from (select seq as cSeq, content, answerCount from surveyContent where surveySeq = #{seq})a
+	</select>
+	
+	<!-- 설문조사했는지검사 -->
+	<select id="checkhistory" resultType="Integer" parameterType="java.util.HashMap">
+		select count(*) from surveyhistory where surveySeq = #{seq} and memberSeq = #{userSeq}
+	</select>
+	
+	<!-- 설문조사조회수증가 -->
+	<update id="updatevotecount" parameterType="String">
+		update survey set voteCount = voteCount + 1 where seq = #{seq}
+	</update>
+	
+	<!-- 설문조사응답증가 -->
+	<update id="updateanswercount" parameterType="String">
+		update surveyContent set answerCount = answerCount + 1 where seq = #{cSeq}
+	</update>
+	
+	<!-- 설문조사기록남기기 -->
+	<insert id="inserthistory" parameterType="java.util.HashMap">
+		insert into surveyhistory (seq, history, surveySeq, memberSeq) values (surveyhistorySeq.nextVal, default, #{seq}, #{userSeq})
+	</insert>
+	
+	<!-- 공지사항총개수 -->
+	<select id="gettotal" resultType="Integer">
+		select count(*) from noticeboard
+	</select>
+		
+	<!-- 공지사항리스트 -->
+	<select id="getnoticelist" resultType="com.standard.exam.admin.board.NoticeDTO" parameterType="java.util.HashMap">
+		select * from (select a.*, rownum as rnum from (select * from noticeboard)a) 
+ 			  <![CDATA[where rnum >= #{start} and rnum <= #{end}]]> order by rnum desc
+	</select>
+	
+	<!-- 일정총개수 -->
+	<select id="getcalendartotal" resultType="Integer">
+		select count(*) from examDate
+	</select>
+	
+	<!-- 일정개수 -->
+	<select id="getcalendarlist" resultType="com.standard.exam.user.board.CalendarDTO" parameterType="java.util.HashMap">
+		select * from (select a.*, rownum as rnum from (select subjectExamDate, examDate from examDate)a) <![CDATA[where rnum >= #{start} and rnum < #{end}]]> order by rnum
+	</select>
+	
+</mapper>

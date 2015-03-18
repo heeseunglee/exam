@@ -1,0 +1,27 @@
+package com.standard.exam.user.exam;
+
+import java.util.List;
+
+import org.json.simple.JSONArray;
+import org.mybatis.spring.SqlSessionTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public class TakeExamDAO {
+
+	@Autowired
+	private SqlSessionTemplate sql;	
+	
+	
+	/**
+	 * 시험 전체 목록 리턴
+	 * @return
+	 */
+	public List<TakeExamDTO> list() {
+		
+		return sql.selectList("TakeExam.list");
+	}
+
+	
+}

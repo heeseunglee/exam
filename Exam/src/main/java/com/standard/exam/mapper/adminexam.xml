@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!-- 관리자 시험 mapper -->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="question">
+	
+	<!-- 문제삽입 -->
+ 	<insert id="add" parameterType="com.standard.exam.admin.exam.QuestionDTO">
+ 		insert into QuestionManage
+ 			(seq, question, answer, explanation, question1, question2, question3, question4, score, questionCNT, answerCNT, description, questionCode)
+ 				 values (QuestionManageSeq.nextVal, #{question}, #{answer}, #{explanation}, #{question1}, #{question2}, #{question3}, #{question4}, #{score}, 0, 0, #{description}, #{questionCode})
+ 	</insert>
+ 	
+ 	<!-- 총 게시물가져오기 -->
+ 	<select id="gettotal" resultType="Integer">
+ 		select count(*) from QuestionManage
+ 	</select>
+ 	
+ 	<!-- 검색어 없는 목록 -->
+ 	<select id="list" resultType="com.standard.exam.admin.exam.QuestionDTO" parameterType="java.util.HashMap">
+ 		select * from 
+ 			(select a.*, rownum as rnum from (select * from QuestionManage order by seq) a)
+ 				<![CDATA[where rnum >= #{start} and rnum <= #{end}]]> order by rnum desc
+ 	</select>
+ 	
+ 	<!-- 검색어있는 목록 -->
+ 	<select id="searchlist" resultType="com.standard.exam.admin.exam.QuestionDTO" parameterType="java.util.HashMap">
+ 		select * from 
+ 			(select a.*, rownum as rnum from (select * from QuestionManage order by seq desc) a)
+ 				 where questionCode like '%' || #{searchWord} || '%' order by rnum desc
+ 	</select>
+ 	
+ 	<!-- 글 수정하기 -->
+ 	<update id="edit" parameterType="com.standard.exam.admin.exam.QuestionDTO">
+ 		update QuestionManage 
+ 			set questionCode=#{questionCode}, score=#{score}, description=#{description}, question=#{question}, question1=#{question1}, question2=#{question2}, question3=#{question3}, question4=#{question4}, answer=#{answer}, explanation=#{explanation} 
+ 					where seq = #{seq} 
+ 	</update>
+ 	
+ 	
+ 	<!-- 글삭제하기 -->
+ 	<delete id="del" parameterType="String">
+ 		delete from QuestionManage where seq = #{seq}
+ 	</delete>
+ 	
+ 	<!-- 대분류리스트가져오기 -->
+ 	<select id="gettpblist" resultType="com.standard.exam.admin.exam.TestPaperDTO">
+		select seq as tpbdivSeq, tpbdiv from tpbdiv	
+ 	</select>
+ 	
+ 	<!-- 중분류리스트가져오기 -->
+ 	<select id="gettpmlist" resultType="com.standard.exam.admin.exam.TestPaperDTO" parameterType="String">
+ 		select seq as tpmdivSeq, tpmdiv from tpmdiv where tpbdiv = #{tpbdiv}
+ 	</select>
+ 	
+ 	<!-- 소분류리스트가져오기 -->
+ 	<select id="gettpslist" resultType="com.standard.exam.admin.exam.TestPaperDTO" parameterType="String">
+ 		select seq as tpsdivSeq, tpsdiv from tpsdiv where tpmdiv = #{tpmdiv}
+ 	</select>
+ 	
+</mapper>

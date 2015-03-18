@@ -1,0 +1,8 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+	<br />
+	<img src="/Account/images/logo1.png" style="width: 70px;"/><br />
+	JRGB Account Manager - 회계업무프로그램<br />
+	팀 자린고비 | 팀장 안해용 | 팀원 송정미 박윤정 이상영 박현석<br />
+    Copyright &copy; JRGB 2015 All rights reserved.<br /><br /><br /><br /><br />
+    

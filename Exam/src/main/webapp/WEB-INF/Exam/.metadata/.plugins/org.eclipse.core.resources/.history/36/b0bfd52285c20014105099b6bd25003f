@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!-- 관리자 시험지 mapper -->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="testpaper">
+	
+	<!-- 중분류목록가져오기 -->
+	<select id="gettpmdiv" resultType="com.standard.exam.admin.exam.TestPaperDTO">
+		select seq as tpmdivSeq, tpmdiv from tpmdiv
+	</select>
+	
+</mapper>

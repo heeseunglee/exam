@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- login_Mapper -->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="loginMapper">
+ 	
+	<select id="idCheck" parameterType="String"  resultType="Integer">
+ 		select count(*) from member where userid = #{id} and active = 'y'
+ 	</select>
+ 	
+ 	<select id="pwCheck" parameterType="java.util.HashMap"  resultType="Integer">
+ 		select count(*) from member where userid = #{id} and userpw = #{pw} and active = 'y'
+ 	</select>
+ 	
+ 	<select id="login" parameterType="java.util.HashMap"  resultType="com.standard.exam.auth.LoginDTO">
+ 		select * from member where userid = #{id} and userpw = #{pw} and active = 'y'
+ 	</select>
+
+	<select id="getMassage" parameterType="String"  resultType="Integer">
+ 		select count(*) from message where toSeq = #{userSeq} and read = 'n'
+ 	</select>
+ 	
+</mapper>

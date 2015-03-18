@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+ 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="usernoticeboard">
+ 	
+ 	<!-- 게시글 총개수 -->
+ 	<select id="getTotal" resultType="Integer">
+ 		select count(*) from noticeboard
+ 	</select>
+ 	
+ 	<!-- 글목록 -->
+ 	<select id="list" parameterType="java.util.HashMap" resultType="com.standard.exam.user.board.UserNoticeDTO">
+ 		select * from (select b.*, rownum as rnum2 from (select a.*, rownum as rnum from (select * from noticeboard)a order by rnum desc)b) <![CDATA[where rnum2 >= #{start} and rnum2 <= #{end}]]>
+ 			
+ 	</select>
+ 	
+ 	<!-- 검색어글목록 -->
+ 	<select id="searchList" parameterType="java.util.HashMap" resultType="com.standard.exam.user.board.UserNoticeDTO">
+ 		select * from (select b.*, rownum as rnum2 from (select a.*, rownum as rnum from (select * from noticeboard)a order by rnum desc)b) 
+ 			<![CDATA[where rnum2 >= #{start} and rnum2 <= #{end}]]> and ${searchColum} like '%' || #{searchWord} || '%'
+ 	</select>
+ 	
+ 	<!-- 조회수증가 -->
+ 	<update id="addCount" parameterType="String">
+ 		update noticeboard set readCount = readCount + 1 where seq = #{seq}
+ 	</update>
+ 	
+ 	<!-- 해당글보기 -->
+ 	<select id="get" parameterType="String" resultType="com.standard.exam.user.board.UserNoticeDTO">
+		select * from noticeboard where seq = #{seq}
+ 	</select>
+
+</mapper>

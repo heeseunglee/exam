@@ -1,0 +1,9 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<div id="copyBlock">
+<br />
+시험의 정석 - 온라인 CBT 서비스 <br />
+팀 시험의 정석 | 팀장 안해용 | 팀원 김준수 박윤정 이성규 이상영 남경호 윤진혁<br />
+Copyright &copy; 시험의 정석 2015 All rights reserved.<br /><br /><br />
+</div>
+    

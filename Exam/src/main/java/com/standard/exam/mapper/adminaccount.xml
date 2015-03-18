@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!-- 관리자 계좌 mapper -->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="account">
+	
+	<!-- 계좌등록 -->
+	<insert id="add" parameterType="com.standard.exam.admin.payment.AccountDTO">
+		insert into bank (seq, bankName, bankNumber, bankRep) values (bankSeq.nextVal, #{bankName}, #{bankNumber}, #{bankRep})
+	</insert>
+	
+	<!-- 방금삽입한 계좌불러오기 -->
+	<select id="getseq" resultType="String">
+		select max(seq) from bank
+	</select>
+	
+	<!-- 계좌삭제 -->
+	<delete id="del" parameterType="String">
+		delete from bank where seq = #{seq}
+	</delete>
+	
+	<!-- 리스트불러오기 -->
+	<select id="list" resultType="com.standard.exam.admin.payment.AccountDTO">
+		select * from bank order by seq
+	</select>
+	
+	<!-- 테이블개수가져오기 -->
+	<select id="count" resultType="Integer">
+		select count(*) from bank
+	</select>
+</mapper>

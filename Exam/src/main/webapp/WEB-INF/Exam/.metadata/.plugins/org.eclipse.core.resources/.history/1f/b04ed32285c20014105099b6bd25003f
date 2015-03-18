@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="category">
+    
+    <!-- 시험종류(대분류) 입력  -->
+	<insert id="tpbdivadd" parameterType="String">
+	    insert into tpbdiv(seq,tpbdiv) values(tpbdivseq.nextval,#{tpbdivadd})   
+	</insert>
+	
+	
+	<!-- 시험종류 -->
+	<!-- 시험종류(대분류) seq 호출 -->
+	<select id="tbpdivcheckseq" resultType="String" parameterType="String">
+	    select seq as tpbdivseq from TPBDIV where TPBDIV = #{tpbdivadd}
+	</select>	
+
+	<!-- 시험종류 리스트 -->
+	<select id="tpbdivlist" resultType="com.standard.exam.admin.exam.CategoryDTO">
+	    select seq as tpbdivseq, tpbdiv from TPBDIV
+	</select>
+	
+	
+	<!-- 시험과목 -->
+	<!-- 시험과목(중분류) 리스트 -->
+	<select id="tpmdivlist" resultType="com.standard.exam.admin.exam.CategoryDTO" parameterType="String">
+	    select seq as tpmdivseq,tpmdiv from TPMDIV where tpbdiv = #{tpbdivseq}
+	</select>
+	
+	<!-- 시험과목 입력 -->
+	<insert id="tpmdivadd" parameterType="com.standard.exam.admin.exam.CategoryDTO">
+	    insert into tpmdiv(seq, tpmdiv, tpbdiv) values(tpmdivseq.nextval, #{tpmdivadd}, #{tpbdivseq})
+	</insert>
+
+	<!-- 시험과목(중분류) seq 호출 -->
+	<select id="tbmdivcheckseq" resultType="String" parameterType="com.standard.exam.admin.exam.CategoryDTO">
+	    select seq as tpmdivseq from TPMDIV where TPMDIV = #{tpmdivadd} and tpbdiv =#{tpbdivseq}
+	</select>		
+	
+	<!-- 시험회차 -->
+	<!-- 시험회차 입력 -->
+	<insert id="tpsdivadd" parameterType="com.standard.exam.admin.exam.CategoryDTO">
+	    insert into tpsdiv(seq, tpsdiv, tpmdiv) values(tpsdivseq.nextval, #{tpsdivadd}, #{tpmdivseq})
+	</insert>
+	
+	<!-- 시험회차(소분류) 리스트 -->
+	<select id="tpsdivlist" resultType="com.standard.exam.admin.exam.CategoryDTO" parameterType="String">
+	    select seq as tpsdivseq,tpsdiv from TPSDIV where tpmdiv = #{tpmdivseq}
+	</select>
+	
+	    
+</mapper>

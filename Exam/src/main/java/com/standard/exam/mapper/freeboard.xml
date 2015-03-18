@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!-- 관리자 시험 mapper -->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="freeboard">
+	
+	 <!-- 스레드가져오기 -->	
+	<select id="getthread" resultType="Integer">
+		select nvl(max(thread), 0) + 1000 from Freeboard
+	</select>
+	 
+	<!-- 게시물 삽입 -->	
+ 	<insert id="add" parameterType="com.standard.exam.user.board.FreeBoardDTO">
+ 	  insert into Freeboard(seq, subject, content, regDate, readCount, commentCount, thread, depth, memberSeq)
+ 	  values(freeboardSeq.nextVal, #{subject}, #{content}, default, default, default, #{thread}, #{depth}, #{memberSeq})
+ 	</insert>
+ 	
+ 	<!-- 리스트 -->
+ 	<select id="list" resultType="com.standard.exam.user.board.FreeBoardDTO" parameterType="java.util.HashMap">
+         select * from (select b.*, rownum as rnum2 from (select a.*, rownum as rnum from (select fb.seq as seq, fb.subject as subject, m.name as name, m.userId as userId, fb.regdate as regdate, fb.readCount as readCount, fb.thread as thread, fb.depth as depth from freeboard fb inner join member m on m.seq = fb.memberSeq order by thread)a order by rnum desc)b) <![CDATA[where rnum2 >= #{start} and rnum2 <= #{end}]]>
+     </select>
+     
+     <!-- 검색리스트 -->
+     <select id="searchlist" resultType="com.standard.exam.user.board.FreeBoardDTO" parameterType="java.util.HashMap">
+     	select * from (select b.*, rownum as rnum2 from (select a.*, rownum as rnum from (select fb.seq as seq, fb.subject as subject, m.name as name, m.userId as userId, fb.regdate as regdate, fb.readCount as readCount, fb.thread as thread, fb.depth as depth from freeboard fb inner join member m on m.seq = fb.memberSeq order by thread)a order by rnum desc)b) <![CDATA[where rnum2 >= #{start} and rnum2 <= #{end}]]> and ${searchColumn} like '%' || #{searchWord} || '%' order by thread desc
+     </select>
+     
+     <!-- 해당글 보기 -->
+     <select id="get" resultType="com.standard.exam.user.board.FreeBoardDTO" parameterType="String">
+         select * from Freeboard where seq = #{seq}
+     </select>
+     
+     <!-- 수정하기 -->
+     <update id="edit" parameterType="com.standard.exam.user.board.FreeBoardDTO">
+        update Freeboard set subject = #{subject}, content = #{content} where seq = #{seq}
+     </update>
+     
+     <!--삭제하기  -->
+     <delete id="del" parameterType="String">
+        delete from Freeboard where seq = #{seq}
+     </delete>
+     
+     <!-- 조회수증가 -->
+ 	<update id="addCount" parameterType="String">
+ 		update Freeboard set readCount = readCount + 1 where seq = #{seq}
+ 	</update>
+ 	
+ 	<!--답변 달기  -->
+ 	<update id="updatethread" parameterType="map">
+ 	 	update Freeboard set thread = thread - 1 where <![CDATA[thread < #{parentThread} and thread > #{prevThread}]]>
+ 	</update>
+ 	
+ 	<!--게시글 총 개수  -->
+ 	<select id="getTotal" resultType="Integer">
+ 	    select count(*) from Freeboard
+ 	</select>
+ 	
+ 	<!--댓글목록 가져오기  -->
+ 	<select id="listComment" parameterType="String" resultType="com.standard.exam.user.board.FreeBoardCommentDTO">
+ 	   select fc.seq as seq, fc.name as name, fc.content as content, fc.regDate as regDate, fb.seq as pSeq, m.seq as userSeq, m.userId as userId from Freeboardcomment fc inner join freeboard fb on fb.seq = fc.pSeq inner join member m on fb.memberSeq = m.seq where fc.pSeq = #{seq}
+ 	</select>
+ 	
+ 	<!-- 댓글쓰기 -->
+ 	<insert id="comment" parameterType="com.standard.exam.user.board.FreeBoardCommentDTO">
+ 	   insert into Freeboardcomment (seq, name, content, regDate, pSeq) values(freeboardcommentSeq.nextVal, #{name}, #{content}, default, #{pSeq})
+ 	</insert>
+ 	<!--댓글 카운트 증가  -->
+ 	<update id="commentCount" parameterType="String">
+ 	  update Freeboard set commentCount = commentCount + 1 where seq = #{pSeq}
+ 	</update>
+ 	
+ 	<!-- 댓글삭제하기 -->
+ 	<delete id="delcomment" parameterType="String">
+ 		delete from freeboardcomment where pSeq = #{seq}
+ 	</delete>
+ 	
+ 	<!-- 개별댓글삭제하기 -->
+ 	<delete id="commentdel" parameterType="String">
+		delete from freeboardcomment where seq = #{seq} 	
+ 	</delete>
+ 	
+ 	<!-- 공지글리스트 -->
+ 	<select id="getnoticelist" resultType="com.standard.exam.admin.board.NoticeDTO">
+ 		select * from (select a.*, rownum as rnum from (select * from noticeboard order by seq desc)a)b where <![CDATA[rnum >= #{start} and rnum <= #{end}]]>
+ 	</select>
+ 	
+ 	<!-- 공지글 총개수가져오기 -->
+ 	<select id="getnoticetotalcount" resultType="Integer">
+ 		select count(*) from noticeboard
+ 	</select>
+ 	
+ 	
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

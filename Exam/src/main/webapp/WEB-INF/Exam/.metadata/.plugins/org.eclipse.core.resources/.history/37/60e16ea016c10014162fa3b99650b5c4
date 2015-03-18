@@ -1,0 +1,70 @@
+package com.standard.exam.user.exam;
+
+import java.util.HashMap;
+import java.util.List;
+
+import org.mybatis.spring.SqlSessionTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public class TakeExamDAO {
+
+	@Autowired
+	private SqlSessionTemplate sql;	
+	
+	
+	/**
+	 * 시험 전체 목록 리턴
+	 * @return
+	 */
+	public List<TakeExamDTO> list() {
+		
+		return sql.selectList("TakeExam.list");
+	}
+
+	/**
+	 * 시험 페이지별 목록 리턴
+	 * @return
+	 */
+	public List<TakeExamDTO> list(HashMap<String, Integer> map) {
+		
+		return sql.selectList("TakeExam.pageList", map);
+	}
+
+	
+	/**
+	 * 전체 게시글 수
+	 * 
+	 * @return int totalCount
+	 */
+	public int getTotalCount() {
+		
+		return sql.selectOne("TakeExam.totalCount");
+	}
+	
+	
+	
+	/**
+	 * 사이드바 메뉴(대분류) 리턴
+	 * @return
+	 */
+	public List<TakeExamDTO> side() {
+
+		return sql.selectList("TakeExam.side");
+	}
+
+	
+	
+	public List<TakeExamDTO> category(HashMap<String, Integer> map) {
+
+		return sql.selectList("TakeExam.category", map);
+	}
+
+	
+	
+	public int getCategoryCount(String sideSeq) {
+
+		return sql.selectOne("TakeExam.categoryCount", sideSeq);
+	}
+}

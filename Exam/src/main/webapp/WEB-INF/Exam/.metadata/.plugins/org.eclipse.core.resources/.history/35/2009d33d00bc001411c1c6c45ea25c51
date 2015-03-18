@@ -1,0 +1,27 @@
+package com.standard.exam.user.board;
+
+import org.json.simple.JSONObject;
+import org.mybatis.spring.SqlSessionTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public class BoardQNADAO {
+
+	
+	@Autowired
+	SqlSessionTemplate sql;	
+	
+	
+	/**
+	 *  질문답변 게시판 게시글 목록 JSON으로 반환
+	 */	
+	public JSONObject list() {
+		
+		List<BoardQNADTO> = new
+		sql.selectList("userQNA.list");
+		
+		return null;
+	}
+
+}

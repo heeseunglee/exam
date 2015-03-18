@@ -1,0 +1,69 @@
+
+
+
+
+
+
+		/* 로그인 박스 
+		====================================================*/
+		#loginBox { 
+			opacity: 0.70;  
+			width: 650px; 
+			margin: auto; 
+			padding-top:120px;
+			/* background-color: #FFFFFF; */ 
+			text-align: center;
+			/* position:absolute;
+			top: 20%;
+			left: 40%; */
+		}
+		/* #loginBox form { margin: 0px auto;} */
+		
+		#loginBox #loginSet {width: 400px; margin: 0px auto;}
+		
+		#loginForm, #loginBtn {
+			text-align: center; padding: 4px; 
+		}
+		#loginForm { 
+			width: 132px; 
+			margin: 0px auto; 
+			float: left; 
+			margin-left: 105px;
+		}
+		#loginForm #id { 
+			margin-bottom: 3px;
+		}
+		#loginForm #pw { 
+			padding-bottom: -3px;
+		}
+		#loginBtn { 
+			width: 58px; 
+			float: left; 
+		}
+		#logIn { 
+			height: 49px;
+		}
+	
+		#welcome { font-size: 50px;}
+		#JRGB { font-size: 50px; color: black; font-weight: bold;}
+		#massage { font-size: 30px; }
+	
+		#content { 
+			min-height: 729px;
+		}
+				
+		
+		
+		
+		
+		
+		
+		
+		
+
+
+
+
+
+		
+		

@@ -1,0 +1,55 @@
+@import url(http://fonts.googleapis.com/css?family=Open+Sans);
+
+body
+, div, p, span
+, ul, ol, li
+, table, tr, td, th
+, a {font-family: '맑은 고딕', '돋움'; font-size: 12px; margin: 0px; padding: 0px;}
+
+/* 전체 width 
+==============================================================*/
+#header #superBar #superBarChild
+, #header #navBar #navBarChild
+, #content, #footer {width: 900px; margin: 0px auto;}
+
+
+
+
+/* 헤더 
+==============================================================*/
+#header {}
+
+#header #superBar { height: 30px; background-color: #454545; /* border-bottom: 1px solid #DEDEDE; */ }
+#header #superBar #superBarChild {}
+#header #superBar #superBarChild > span {
+	float: right; 
+	margin-top: 6px;
+	color : #DEDEDE;
+}
+
+#header #navBar {height: 70px; background-color: #F4D03F;}
+#header #navBar #navBarChild {}
+#header #navBar #navBarChild #examLogo {width:60px; margin-top: 6px; float: left; }
+
+#header #navBar ul {
+	list-style: none;
+	list-style-type: none;  
+	display:block;
+	margin-top: 25px;
+	margin-left: 50px;
+	float: left; 
+}
+#header #navBar ul .navBtn { 
+	display: inline-block;
+	width: 130px;
+	text-align: center;
+}
+#header #navBar ul .navBtn > a { 
+	font-size: 15px; 
+	color:#333333; 
+	font-family: '맑은 고딕'; 
+	font-weight: bold;  
+}
+
+
+

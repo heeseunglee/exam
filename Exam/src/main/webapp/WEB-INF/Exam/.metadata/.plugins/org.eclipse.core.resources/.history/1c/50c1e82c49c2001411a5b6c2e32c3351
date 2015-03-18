@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="testpaper">
+    
+	<!-- 시험종류 -->
+	<!-- 시험종류 리스트 -->
+	<select id="tpbdivlist" resultType="com.standard.exam.admin.exam.TestPaperDTO">
+	    select seq as tpbdivSeq, tpbdiv from TPBDIV
+	</select>
+
+	<!-- 시험종류(대분류) seq 호출 -->
+	<select id="tbpdivcheckseq" resultType="String" parameterType="String">
+	    select seq as tpbdivSeq from TPBDIV where TPBDIV = #{tpbdiv}
+	</select>	
+
+	<!-- 시험과목 -->
+	<!-- 시험과목(중분류) 리스트 -->
+	<select id="tpmdivlist" resultType="com.standard.exam.admin.exam.TestPaperDTO" parameterType="String">
+	    select seq as tpmdivSeq,tpmdiv from TPMDIV where tpbdiv = #{tpbdiv}
+	</select>
+	
+	<!-- 문제선택 중분류 리스트 -->
+	<select id="tpmdivcheck" resultType="String" parameterType="String">
+	    select tpmdiv from TPMDIV where seq = #{tpmdiv}
+	</select>
+		
+
+	
+	<!-- 시험회차 -->
+	<!-- 시험회차(소분류) 리스트 -->
+	<select id="tpsdivlist" resultType="com.standard.exam.admin.exam.TestPaperDTO" parameterType="String">
+	    select seq as tpsdivSeq,tpsDiv from TPSDIV where tpmdiv = #{tpmdiv}
+	</select>
+	
+	<!-- 시험문제 -->
+	<!-- 시험문제불러오기 -->
+	<select id="questionlist" resultType="com.standard.exam.admin.exam.QuestionDTO" parameterType="String">
+	    select * from QuestionManage where questionCode like '%' || #{tpmdiv} || '%'
+	</select>
+	
+	
+	
+	<!-- 문제지등록 -->
+	<insert id="tpmadd" parameterType="com.standard.exam.admin.exam.TestPaperDTO">
+	    insert into TestPaperManage(seq,TPMPrice,TPMTime,TPMsubject, TPSDIV) 
+	    values(TestPaperManageSeq.nextval,#{tpmPrice},#{tpmTime},#{tpmSubject},#{tpsDiv})
+	</insert>
+	
+	
+	<!-- 선택문제 중분류 호출 -->
+	<select id="testpaperseq" resultType="String">
+	    select max(seq) from testpapermanage 
+	</select>
+	
+	<!-- 선택문제 추가 -->
+	<insert id="questionadd" parameterType="com.standard.exam.admin.exam.QuestionDTO">
+	    insert into TestGroup(seq,QuestionManage,TestPaperManage) values(TestGroupSeq.nextval,#{seq},#{testpaperseq})
+	</insert>
+	    
+</mapper>

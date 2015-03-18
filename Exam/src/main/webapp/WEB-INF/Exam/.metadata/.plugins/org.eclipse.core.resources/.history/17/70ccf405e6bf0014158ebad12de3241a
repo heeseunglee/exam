@@ -1,0 +1,10 @@
+package com.standard.exam.user.exam;
+
+import org.springframework.stereotype.Controller;
+
+@Controller
+public class TakeExamController {
+	
+	
+
+}

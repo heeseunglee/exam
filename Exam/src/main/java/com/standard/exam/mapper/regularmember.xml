@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="regularmember">
+ 	
+ 	<!-- 정회원 비설정 저장하기 -->  
+ 	<insert id="add" parameterType="com.standard.exam.admin.member.RegularMemberDTO">
+ 		insert into regularmember (seq, servicedate,serviceprice ) values (regularmemberSeq.nextVal, #{servicedate}, #{serviceprice})
+ 		
+ 	</insert>
+ 	
+ 	<!-- 글목록 -->
+ 	<select id="list" parameterType="java.util.HashMap" resultType="com.standard.exam.admin.member.RegularMemberDTO">
+ 		select * from regularmember
+ 	</select>
+ 	
+ 	<!-- 목록 한 줄 삭제 -->
+ 	<delete id="del" parameterType="String">
+ 		delete from regularmember where seq = #{seq}
+ 	</delete>
+ 	
+ 	<!-- 해당글 보기 -->
+ 	<select id="get" parameterType="String" resultType="com.standard.exam.admin.member.RegularMemberDTO">
+ 		select * from regularmember where seq = #{seq}
+ 	</select>
+ 	
+ </mapper>

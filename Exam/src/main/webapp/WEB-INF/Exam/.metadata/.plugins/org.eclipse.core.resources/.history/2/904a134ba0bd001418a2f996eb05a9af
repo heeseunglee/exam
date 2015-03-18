@@ -1,0 +1,18 @@
+#loginBlock {
+	width: 200px; 
+	margin: 150px auto;
+	border-top: 5px solid #F4D03F;
+	/* padding: 20px; */
+}
+#loginBlock #loginBlock_titleBox,
+#loginBlock #loginBlock_inputBox {
+	padding: 20px 0px;
+}
+
+
+#loginBlock #loginBlock_titleBox {
+	border-bottom: 1px dotted #DEDEDE;
+}
+#loginBlock #loginBlock_inputBox {
+	
+}
